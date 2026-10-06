@@ -1,0 +1,6 @@
+# AI gateway product preview
+
+Static marketing site. Unlisted prelaunch preview, not an AI API endpoint.
+Product claims and setup requirements: /#features and /#install.
+Compatibility caveats: /#faq.
+No live generation, account creation, payments, or gateway access occurs on this site.

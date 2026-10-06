@@ -1,0 +1,10 @@
+artifacts/
+.astro/
+.devspecs/
+devspecs/
+dist/
+.env
+.env.*
+!.env.example
+node_modules/
+.verify-artifacts/

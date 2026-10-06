@@ -1,0 +1,13 @@
+---
+import { PRODUCT_NAME } from '../config';
+interface Props { surface: string; alt: string; caption: string; eager?: boolean; }
+const { surface, alt, caption, eager = false } = Astro.props;
+---
+<figure class="product-shot">
+  <div class="window-bar"><span>{surface === 'try' ? 'Try · Decisions' : surface.charAt(0).toUpperCase() + surface.slice(1)}</span><span>{PRODUCT_NAME}</span></div>
+  <picture>
+    <source data-theme-image media="(prefers-color-scheme: dark)" srcset={`/images/product/${surface}-dark.webp`} />
+    <img src={`/images/product/${surface}-light.webp`} width="1440" height="960" alt={alt} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding="async" />
+  </picture>
+  <figcaption>{caption}</figcaption>
+</figure>

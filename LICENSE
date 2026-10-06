@@ -1,0 +1,9 @@
+Copyright (c) 2026 Tim Nunamaker. All rights reserved.
+
+The content, design and code of this website are not licensed for reuse.
+The source is public for transparency only; no permission to copy, modify,
+or redistribute it is granted.
+
+Third-party components keep their own licenses:
+- DM Sans and Newsreader fonts: SIL Open Font License 1.1 (public/fonts/*-LICENSE.txt).
+- npm dependencies: see each package's license (Astro and Tailwind CSS are MIT).

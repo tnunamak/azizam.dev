@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "source": "DESIGN.md",
+  "extensions": {
+    "breakpoints": {
+      "desktopWide": "1600px",
+      "tablet": "1000px",
+      "mobile": "760px"
+    },
+    "motion": {
+      "standardTransition": "background .18s ease, transform .18s ease",
+      "proofReveal": ".8s cubic-bezier(.16, 1, .3, 1)",
+      "reducedMotion": "Disable all animations and transitions under prefers-reduced-motion: reduce."
+    },
+    "focus": {
+      "default": "2px solid var(--green) outline with 5px offset",
+      "codeDark": "2px solid #afd4b9 outline"
+    },
+    "depth": {
+      "strategy": "Flat tonal layering with borders and clipped proof/code surfaces; no box-shadow tokens."
+    },
+    "componentDetails": {
+      "copyButton": "Transparent dark-surface button, 4px radius, 1px #526557 border, #34483b hover background.",
+      "themeToggle": "44px circular outline control on desktop; 38px on mobile."
+    }
+  }
+}
