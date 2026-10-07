@@ -6,7 +6,7 @@ import { PRODUCT_NAME, PUBLIC_SOURCE, GITHUB_URL, DESCRIPTION, QUICKSTART } from
 import '../styles/global.css';
 const title = `${PRODUCT_NAME} — Your own AI provider`;
 const setupCTA = PUBLIC_SOURCE ? 'Install your gateway' : 'View preview setup';
-const tools = ['OpenAI SDKs', 'Anthropic SDK', 'Ollama clients', 'Open WebUI', 'LibreChat', 'SillyTavern', 'Cursor', 'Codex', 'Claude Code', 'MCP', 'A1111 clients', 'OpenAI Realtime'];
+const tools = ['OpenAI SDKs', 'Anthropic SDK', 'Ollama clients', 'Open WebUI', 'LibreChat', 'SillyTavern', 'Codex', 'Claude Code', 'MCP', 'A1111 clients', 'OpenAI Realtime'];
 const protocols = [
  {name: 'OpenAI', path: '/openai/v1', code: `from openai import OpenAI\n\nclient = OpenAI(\n    base_url="http://localhost:5000/openai/v1",\n    api_key="opk_YOUR_KEY_HERE",\n)\n\nresponse = client.chat.completions.create(\n    model="llama3",\n    messages=[{"role": "user", "content": "Hello"}],\n)`},
  {name: 'Anthropic', path: '/anthropic/v1', code: `import anthropic\n\nclient = anthropic.Anthropic(\n    base_url="http://localhost:5000/anthropic",\n    api_key="opk_YOUR_KEY_HERE",\n)\n\nresponse = client.messages.create(\n    model="llama3", max_tokens=256,\n    messages=[{"role": "user", "content": "Hello"}],\n)`},
