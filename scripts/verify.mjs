@@ -27,7 +27,7 @@ try {
    await page.goto(url, {waitUntil:'networkidle'});
    await page.evaluate(() => document.fonts.ready);
    assert.equal(await page.locator('h1').count(), 1);
-   assert.match(await page.locator('h1').innerText(), /Your apps\.\s+Your engines\.\s+Speaking clearly/);
+   assert.match(await page.locator('h1').innerText(), /One self-hosted gateway\s+for your AI apps/);
    assert.equal(await page.locator('meta[name=robots]').getAttribute('content'), 'noindex, nofollow');
    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://azizam.dev/');
    for (const property of ['type', 'url', 'title', 'description', 'image']) {
