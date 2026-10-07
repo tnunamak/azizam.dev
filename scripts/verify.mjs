@@ -28,7 +28,19 @@ try {
    await page.evaluate(() => document.fonts.ready);
    assert.equal(await page.locator('h1').count(), 1);
    assert.match(await page.locator('h1').innerText(), /Your apps\.\s+Your engines\.\s+Speaking clearly/);
-   assert.match(await page.locator('meta[name=robots]').getAttribute('content'), /noindex/);
+   assert.equal(await page.locator('meta[name=robots]').getAttribute('content'), 'noindex, nofollow');
+   assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://azizam.dev/');
+   for (const property of ['type', 'url', 'title', 'description', 'image']) {
+    assert.ok(await page.locator(`meta[property="og:${property}"]`).getAttribute('content'));
+   }
+   for (const name of ['card', 'title', 'description']) {
+    assert.ok(await page.locator(`meta[name="twitter:${name}"]`).getAttribute('content'));
+   }
+   assert.match(await page.locator('#install').innerText(), /Setup requires access to the private Azizam repository\./);
+   assert.match(await page.locator('.closing a').innerText(), /^View preview setup\s+↗$/);
+   assert.equal(await page.locator('#panel-0').isVisible(), true);
+   assert.equal(await page.locator('#panel-1').isVisible(), false);
+   assert.equal(await page.locator('#panel-2').isVisible(), false);
    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `Page overflow at ${width}`);
    assert.equal(await page.locator('.hero-proof img').evaluate(img => img.complete && img.naturalWidth > 0), true, 'Product image loaded');
    await verifyProductImages(page, theme);
@@ -71,6 +83,17 @@ try {
    await context.close();
   }
  }
+ const noScriptContext = await browser.newContext({ javaScriptEnabled: false });
+ try {
+  const page = await noScriptContext.newPage();
+  await page.goto(url, { waitUntil: 'networkidle' });
+  for (const index of [0, 1, 2]) {
+   assert.equal(await page.locator(`#panel-${index}`).isVisible(), true, 'Protocol example available without JavaScript');
+   assert.ok((await page.locator(`#panel-${index} code`).innerText()).length > 0);
+  }
+  assert.equal(await page.locator('meta[name=robots]').getAttribute('content'), 'noindex, nofollow');
+  console.log('No-JavaScript check: all three protocol examples visible');
+ } finally { await noScriptContext.close(); }
  await writeFile(`${output}/journey-results.json`,JSON.stringify({url,findings},null,2));
  console.log(JSON.stringify({url,viewports:findings.length,passed:true}));
 } finally {await browser.close();}
