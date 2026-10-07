@@ -2,7 +2,7 @@
 export const PRODUCT_NAME = 'Azizam';
 export const GITHUB_URL: string | null = null; // Set the public gateway source link at launch.
 export const DESCRIPTION = 'Keep your favorite frontend. Keep your favorite backend. Azizam connects your existing apps and agents to local AI engines and explicitly chosen remote providers.';
-export const QUICKSTART = `git clone https://github.com/Vivid-Fish/azizam.git
+export const QUICKSTART = `git clone https://github.com/tnunamak/azizam.git
 cd azizam
 docker compose up -d
 
