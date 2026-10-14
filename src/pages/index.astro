@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL, GET_STARTED } from '../config';
+import { GET_STARTED } from '../config';
 import '../styles/home.css';
 
 // The proof is copied from the recorded example "chat-default" (recorded 2 Oct 2026).
@@ -20,7 +20,7 @@ const proof = {
           <a class="btn btn-primary" data-cta href={GET_STARTED}>Get started</a>
           <a class="btn btn-secondary" data-cta href="/examples/">See it work →</a>
         </div>
-        <p class="microline">Runs on a computer you control · Works with OpenAI, Anthropic and Ollama clients · Apache-2.0</p>
+        <p class="microline">Runs on a computer you control · Works with OpenAI, Anthropic and Ollama clients · Private preview</p>
       </div>
       <figure class="proof-card card" aria-labelledby="proof-caption">
         <figcaption id="proof-caption" class="eyebrow">A real request, recorded through Azizam</figcaption>
@@ -93,7 +93,7 @@ const proof = {
       <div class="early card" id="early-access">
         <p class="eyebrow">Early access</p>
         <p class="lead">Azizam is in private preview.</p>
-        <p>To get access, write to <a href={`mailto:${CONTACT_EMAIL}?subject=Azizam%20early%20access`}>{CONTACT_EMAIL}</a>.</p>
+        <p>Access is by invitation for now.</p>
       </div>
       <p class="after-access">Once you have access:</p>
       <div class="command-block card">

@@ -6,7 +6,6 @@ export const DESCRIPTION =
 
 // The gateway repository is private. The site does not show a clone command.
 // UNVERIFIED: PRODUCT.md names no contact. Replace this placeholder before merge.
-export const CONTACT_EMAIL = 'contact-unverified@azizam.dev';
 export const CONTACT_VERIFIED = false;
 
 export const NAV = [

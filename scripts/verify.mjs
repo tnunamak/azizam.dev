@@ -101,8 +101,6 @@ for (const [path, { html }] of pages) if (path.startsWith('/docs/')) {
 const docsCount = [...pages.keys()].filter((p) => p.startsWith('/docs/')).length;
 assert.equal(docsCount, 35, 'All 35 docs pages are built');
 assert.ok((await readdir(join(dist, 'pagefind'))).includes('pagefind.js'), 'Pagefind index exists');
-const home = pages.get('/').html;
-if (/contact-unverified@/.test(home)) warnings.push('UNVERIFIED: the early-access contact is a placeholder (src/config.ts).');
 summary.push({ pages: pages.size, docs: docsCount, internalLinksChecked: links });
 
 // ---- Browser checks ----------------------------------------------------------------------
@@ -164,7 +162,8 @@ try {
           assert.match(await page.locator('.proof-exchange').innerText(), new RegExp(SKY_REPLY.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
           assert.match(await page.locator('.proof-meta').innerText(), /Ran in 4\.3 s · 115 tokens · recorded 2 Oct 2026/);
           assert.match(await page.locator('#early-access').innerText(), /Azizam is in private preview\./);
-          assert.match(await page.locator('#early-access a').getAttribute('href'), /^mailto:/);
+          assert.match(await page.locator('#early-access').innerText(), /Access is by invitation for now\./);
+          assert.equal(await page.locator('#early-access a[href^="mailto:"]').count(), 0, `${label}: no contact address until the owner chooses one`);
           assert.equal(await page.locator('.quick-steps li').count(), 3);
           assert.equal(await page.locator('.value-card').count(), 4);
           assert.equal(await page.locator('.brand .mark').count(), 1);
