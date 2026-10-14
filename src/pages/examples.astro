@@ -1,0 +1,60 @@
+---
+import { marked } from 'marked';
+import Base from '../layouts/Base.astro';
+import groups from '../data/examples.json';
+import '../styles/examples.css';
+
+// Every example is a real recording: a script sent the request through an Azizam gateway and stored the result.
+// Nothing here is written by hand. Text only; the recordings with images and audio are not shown.
+const date = (seconds: number) =>
+  new Date(seconds * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const render = (text: string) => marked.parse(text, { async: false, gfm: true }) as string;
+const pretty = (value: unknown) => (typeof value === 'string' ? value : JSON.stringify(value, null, 2));
+---
+<Base title="See it work · Azizam" description="Real requests recorded through an Azizam gateway: the input, the output, the model name and how long it took." bodyClass="examples">
+  <div class="examples-intro wrap">
+    <h1>See it work</h1>
+    <p class="lede">Real requests recorded through an Azizam gateway: the input, the output, the model name and how long it took.</p>
+    <nav aria-label="Jump to a capability">
+      <ul class="chips">
+        {groups.map((group) => <li><a href={`#${group.id}`}>{group.title}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <main id="content" class="wrap" tabindex="-1">
+    {groups.map((group) => (
+      <section class="group" id={group.id} aria-labelledby={`${group.id}-title`}>
+        <h2 id={`${group.id}-title`}>{group.title}</h2>
+        <p>{group.blurb}</p>
+        <div class="example-list">
+          {group.examples.map((example) => (
+            <article class="example card" id={example.id} aria-labelledby={`${example.id}-title`}>
+              <h3 id={`${example.id}-title`}>{example.title}</h3>
+              {example.inputs.map((input) => (
+                <div>
+                  <p class="label">{input.label}</p>
+                  <pre class:list={[input.kind === 'text' && 'prompt']} tabindex="0">{pretty(input.value)}</pre>
+                </div>
+              ))}
+              {example.outputs.map((output) => (
+                <div>
+                  <p class="label">{output.label ?? 'Reply'}</p>
+                  {example.id.startsWith('embeddings')
+                    ? <div class="reply"><pre class="plain">{output.text}</pre></div>
+                    : <div class="reply" set:html={render(output.text)} />}
+                </div>
+              ))}
+              <p class="example-meta">
+                <span>Model: <code>{example.model}</code></span>
+                <span>{example.seconds} s</span>
+                {example.chips.map((chip) => <span>{chip}</span>)}
+                <span>Recorded {date(example.created_at)}</span>
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+    <p class="more"><a href="/docs/api/">How to call each route</a> · <a href="/docs/start/install/">Set up your own gateway</a></p>
+  </main>
+</Base>

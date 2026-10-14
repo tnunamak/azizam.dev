@@ -1,0 +1,84 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { loadDocs, docsUrl } from '../../lib/docs';
+import '../../styles/docs.css';
+
+export async function getStaticPaths() {
+  const { sections, flat } = await loadDocs();
+  return flat.map(({ entry, section }, i) => ({
+    params: { slug: entry.id === 'index' ? undefined : entry.id.replace(/\/index$/, '') },
+    props: { entry, section, sections, prev: flat[i - 1]?.entry, next: flat[i + 1]?.entry },
+  }));
+}
+
+const { entry, section, sections, prev, next } = Astro.props;
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const title = entry.id === 'index' ? 'Azizam documentation' : `${entry.data.title} · Azizam docs`;
+---
+<Base title={title} description={entry.data.summary} bodyClass="docs">
+  <div class="docs-toolbar wrap">
+    <button class="search-open" type="button" aria-haspopup="dialog" aria-controls="search" hidden>
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="m11 11 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+      <span>Search the docs</span><kbd aria-hidden="true">/</kbd>
+    </button>
+  </div>
+  <div class="docs-shell wrap">
+    <details class="docs-menu">
+      <summary><span class="docs-menu-label">Documentation</span> <span class="docs-menu-here">{entry.data.title}</span></summary>
+      <nav aria-label="Documentation menu">
+        {sections.map((s) => (
+          <div class="nav-section">
+            <p class="nav-heading">{s.title}</p>
+            <ul>{s.pages.map((p) => <li><a href={docsUrl(p.id)} aria-current={p.id === entry.id ? 'page' : undefined}>{p.data.title}</a></li>)}</ul>
+          </div>
+        ))}
+      </nav>
+    </details>
+    <nav class="docs-nav" aria-label="Documentation">
+      {sections.map((s) => (
+        <div class="nav-section">
+          <p class="nav-heading">{s.title}</p>
+          <ul>{s.pages.map((p) => <li><a href={docsUrl(p.id)} aria-current={p.id === entry.id ? 'page' : undefined}>{p.data.title}</a></li>)}</ul>
+        </div>
+      ))}
+    </nav>
+    <main id="content" class="docs-main" tabindex="-1">
+      {toc.length >= 2 && (
+        <details class="toc-inline">
+          <summary>On this page</summary>
+          <nav aria-label="On this page (menu)"><ul>{toc.map((h) => <li class={`toc-l${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul></nav>
+        </details>
+      )}
+      <article class="prose" data-pagefind-body>
+        <p class="eyebrow">{section}</p>
+        <Content />
+      </article>
+      <nav class="pager" aria-label="Previous and next page">
+        {prev ? <a class="pager-prev" href={docsUrl(prev.id)} rel="prev"><span>Previous</span>{prev.data.title}</a> : <span />}
+        {next ? <a class="pager-next" href={docsUrl(next.id)} rel="next"><span>Next</span>{next.data.title}</a> : <span />}
+      </nav>
+    </main>
+    {toc.length >= 2 && (
+      <aside class="toc">
+        <nav aria-label="On this page">
+          <p class="toc-title">On this page</p>
+          <ul>{toc.map((h) => <li class={`toc-l${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+        </nav>
+      </aside>
+    )}
+  </div>
+  <dialog id="search" class="search" aria-labelledby="search-title">
+    <form method="dialog" class="search-form" role="search">
+      <h2 id="search-title" class="visually-hidden">Search the docs</h2>
+      <label class="visually-hidden" for="search-input">Search the docs</label>
+      <input id="search-input" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false" aria-describedby="search-count" aria-controls="search-results" />
+      <button class="search-close" type="submit" value="close">Close</button>
+    </form>
+    <p id="search-count" class="search-count" role="status" aria-live="polite"></p>
+    <ul id="search-results" class="search-results"></ul>
+  </dialog>
+  <p id="copy-status" class="visually-hidden" role="status" aria-live="polite"></p>
+  <script>import '../../scripts/docs.ts';</script>
+</Base>
