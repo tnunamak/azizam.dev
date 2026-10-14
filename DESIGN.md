@@ -1,156 +1,60 @@
 ---
 name: Azizam
-description: Existing apps and agents connected to owner-controlled AI engines.
+description: A self-hosted AI gateway, shared on the owner's terms.
 colors:
-  paper: "#f6f4ec"
-  ink: "#202d29"
-  muted: "#58635d"
-  line: "#d8ddd3"
-  green: "#155b50"
-  soft: "#e9e9de"
-  code: "#182b25"
-  code-ink: "#e5eee5"
-  dark-paper: "#14221e"
-  dark-ink: "#ecede2"
-  dark-muted: "#afbcb2"
-  dark-line: "#394b42"
-  dark-green: "#69d8c7"
-  dark-soft: "#20332a"
-  dark-code: "#0c1813"
+  bg: "#f3f6f6"
+  panel: "#ffffff"
+  panel2: "#e9eeef"
+  line: "#d7e0e2"
+  text: "#10232a"
+  muted: "#3d4f55"
+  accent: "#0a6676"
+  primary: "#0d4552"
+  brand-copper: "#c4532b"
+  dark-bg: "#0c1f25"
+  dark-panel: "#112930"
+  dark-text: "#e3ecee"
+  dark-muted: "#b4c6cb"
+  dark-accent: "#8cc8cb"
+  dark-primary: "#1f6f79"
+  dark-brand-copper: "#f08a5d"
+  code-bg: "#0d1117"
 typography:
-  display:
-    fontFamily: "Newsreader Variable, serif"
-    fontSize: "clamp(60px, 6.1vw, 88px)"
-    fontWeight: 450
-    lineHeight: 1.02
-    letterSpacing: "-0.035em"
-  headline:
-    fontFamily: "Newsreader Variable, serif"
-    fontSize: "clamp(42px, 4.4vw, 64px)"
-    fontWeight: 450
-    lineHeight: 1.05
-    letterSpacing: "-0.035em"
-  body:
-    fontFamily: "DM Sans Variable, sans-serif"
-    fontSize: "17px"
-    lineHeight: 1.65
-  title:
-    fontSize: "clamp(34px, 3vw, 46px)"
-  utility:
-    steps: [10, 11, 12, 13, 14, 15, 16, 19, 20, 22, 30]
-  label:
-    fontFamily: "DM Sans Variable, sans-serif"
-    fontSize: "12px"
-    fontWeight: 550
-  mono:
-    fontFamily: "ui-monospace, SFMono-Regular, Consolas, monospace"
+  fontFamily: "system-ui, -apple-system, Segoe UI, sans-serif"
+  h1: "60px / 38px phone, weight 750, line 1.05, -0.02em"
+  h2: "36px / 28px phone"
+  h3: "20px"
+  body: "17px / 16px phone, line 1.55"
 rounded:
-  sm: "4px"
-  md: "5px"
-  lg: "8px"
-  full: "50%"
-spacing:
-  container-desktop: "calc(100% - 96px)"
-  container-tablet: "calc(100% - 64px)"
-  container-mobile: "calc(100% - 40px)"
-components:
-  button-primary:
-    backgroundColor: "{colors.green}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.md}"
-    padding: "14px 23px"
-    height: "50px"
-  code-block:
-    backgroundColor: "{colors.code}"
-    textColor: "{colors.code-ink}"
-    rounded: "{rounded.lg}"
+  card: "16px"
+  control: "6px to 8px"
 ---
 
 # Design System: Azizam
 
-## Refresh direction
+The tokens above live as CSS custom properties in `src/styles/global.css`. They match the gateway app and its product-site spec (`site-hill/DESIGN.md`). The site loads no web fonts and no third-party hosts.
 
-Persuade mode. The client-to-gateway-to-engine diagram is the authored hero moment: two request passes, stopped within four seconds, disabled for reduced motion. The product is proved through eight real main-branch UI captures with explicit seeded captions. Newsreader, warm paper, deep green and the app’s outline fish carry the identity. Dark accent matches app teal `#69d8c7`.
+## Principles
 
-## Overview
+- One outcome claim, one real artifact (a recorded request and reply), then mechanism. Home stays short; the gallery lives on Examples and the detail lives in Docs.
+- Copper is the brand mark colour. On the site it marks the curl, the words "Your own" in the h1, the early-access rule and the focus ring. It is never body text, a button or a link.
+- Primary actions use deep teal. Links use the accent. Light and dark follow the system setting (`prefers-color-scheme`); there is no toggle.
+- Cards have a 16px radius and a 1px border. No shadows. Sections are 96px apart on desktop, 64px on phone.
+- Every number and every output on the site comes from a recording or from the docs. No testimonials, counts, logos or invented results.
+- Motion is not used. Any added motion must respect `prefers-reduced-motion`.
 
-**Creative North Star: "The Independent Software Editorial"**
+## Brand
 
-The visual system reads like a careful technical manual: warm paper, exact typography, sparse rules, and real product proof.
+The mark is the copper curl, drawn by `docs/design/brand/curl.py` in the gateway repository. `src/components/Mark.astro` holds the master path, `public/favicon.svg` the firmer 16 and 32 px drawing, and `npm run assets` renders `public/og.png` and `public/apple-touch-icon.png`. The fish is retired.
 
-**Key Characteristics:**
-- Serif display type carries the promise; DM Sans handles UI and prose.
-- Prose stays unboxed; proof, code, and routing diagrams may be framed.
-- Green is the sole accent.
+## Pages
 
-## Colors
+- **Home** (`/`): hero with the recorded exchange, four value cards, a three-stage flow, quick start with an early-access block, and the honest-limits list.
+- **Examples** (`/examples/`): recorded text requests, grouped by capability, with a chip row that jumps between groups.
+- **Docs** (`/docs/`): sidebar, on-page contents, search (Pagefind), previous and next links.
 
-The palette is warm paper, forest ink, muted utility text, and a deep green accent; dark mode translates the same roles into forest-black.
+All three share one header (brand, Examples, Docs, API, Get started) and one footer. At 390px the header shows the brand and a 44px Menu disclosure.
 
-### Primary
-- **Gateway Green** (`#155b50`): links, primary actions, selection, focus outlines, and local-first sections.
+## Accessibility
 
-### Neutral
-- **Warm Paper** (`#f6f4ec`): page background and primary-action text.
-- **Forest Ink** (`#202d29`): main copy and headings.
-- **Quiet Muted** (`#58635d`): captions, notes, secondary text, and status qualifiers.
-- **Rule Line** (`#d8ddd3`): section dividers and light borders.
-- **Soft Paper** (`#e9e9de`): header strips and hover fields.
-- **Code Ink Surface** (`#182b25`): code blocks and dense technical proof.
-
-**The One Accent Rule.** Use green for decisions, links, and emphasis.
-
-## Typography
-
-**Display Font:** Newsreader Variable, serif
-
-**Body Font:** DM Sans Variable, sans-serif
-
-**Label/Mono Font:** DM Sans Variable for UI labels, DM Sans on the compatibility heading, and system monospace for code.
-
-**Character:** Editorial but practical: Newsreader gives the page a bookish promise; DM Sans keeps details clear.
-
-### Hierarchy
-- **Display** (450, `clamp(60px, 6.1vw, 88px)`, `1.02`): hero promise.
-- **Headline** (450, `clamp(42px, 4.4vw, 64px)`, `1.05`): major section starts.
-- **Title** (450, `clamp(34px, 3vw, 46px)`, `1.07`): feature headings.
-- **Body** (`17px`, `1.65`): prose, often narrowed to about 350-390px.
-- **Label** (`11-14px`, medium weight): navigation, captions, code headers, and controls.
-
-## Layout
-
-The page uses a centered `1240px` max container with desktop gutters of `48px`, tablet gutters of `32px`, and mobile gutters of `20px`. Hero and feature sections use two-column grids on desktop, then collapse below `760px`. Section rhythm is spacious: intros start around `100px`, rows use `76px` vertical padding, and dividers carry the flow.
-
-## Elevation & Depth
-
-The system has no shadow vocabulary. Depth comes from tonal surfaces, horizontal rules, clipped proof windows, and code blocks.
-
-## Shapes
-
-Corners are restrained: `5px` for buttons, `8px` for proof and code containers, circles for the gateway hub, icon controls and step markers. Borders are one-pixel rules.
-
-## Components
-
-### Buttons
-- **Shape:** compact rectangle with `5px` radius and at least `50px` height.
-- **Primary:** green fill, paper text, `14px 23px` padding, medium label.
-- **Hover / Focus:** primary lifts `-2px`; focus uses a `2px` green outline with `5px` offset.
-
-### Code Blocks
-- **Style:** dark green ink surface, pale code text, `8px` radius, header strip, optional copy button.
-- **Text:** `12px` desktop code, `11px` small-screen code, `1.8` line-height.
-
-### Navigation
-- **Style:** small DM Sans links, sparse spacing, underline on hover, compact mobile header.
-
-## Do's and Don'ts
-
-### Do:
-- **Do** use real product visuals and exact protocol examples as proof.
-- **Do** keep explanatory prose outside cards.
-- **Do** preserve the paper, ink, green, and code-surface roles in both themes.
-
-### Don't:
-- **Don't** add testimonials, stars, live status, costs, timings, or unsupported coverage claims.
-- **Don't** introduce shadows for ordinary layout.
-- **Don't** add new accent colors or rounded pill-heavy UI.
+AA contrast in both themes, one h1 per page, ordered headings, a skip link, visible focus, 44px tap targets on phones, and pages that read without JavaScript. `npm run verify` checks these with axe and layout assertions.

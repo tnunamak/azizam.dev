@@ -1,0 +1,36 @@
+---
+import Mark from './Mark.astro';
+import { PRODUCT_NAME, NAV, GET_STARTED } from '../config';
+
+// `current` is the pathname. The exact page gets aria-current="page";
+// its parent section gets aria-current="true".
+interface Props { current: string; }
+const { current } = Astro.props;
+const links = [
+  ...NAV.map((link) => ({ ...link, primary: false })),
+  { key: 'start', label: 'Get started', href: GET_STARTED, primary: true },
+];
+function mark(href: string): 'page' | 'true' | undefined {
+  if (current === href) return 'page';
+  const inApi = current.startsWith('/docs/api/');
+  const inStart = current === GET_STARTED;
+  if (href === '/examples/') return current.startsWith('/examples/') ? 'true' : undefined;
+  if (href === '/docs/api/') return inApi ? 'true' : undefined;
+  if (href === '/docs/') return current.startsWith('/docs/') && !inApi && !inStart ? 'true' : undefined;
+  return undefined;
+}
+---
+<header class="site-header">
+  <div class="bar wrap">
+    <a class="brand" href="/" aria-current={current === '/' ? 'page' : undefined}><Mark size={28} />{PRODUCT_NAME}</a>
+    <nav class="site-nav" aria-label="Site">
+      {links.map((link) => <a class:list={[link.primary && 'btn btn-primary']} href={link.href} aria-current={mark(link.href)}>{link.label}</a>)}
+    </nav>
+    <details class="site-disclosure">
+      <summary>Menu</summary>
+      <nav aria-label="Site menu">
+        {links.map((link) => <a class:list={[link.primary && 'btn btn-primary']} href={link.href} aria-current={mark(link.href)}>{link.label}</a>)}
+      </nav>
+    </details>
+  </div>
+</header>

@@ -18,10 +18,10 @@ Your own AI provider. One endpoint and key for existing clients, running on the 
 Compatible protocol facades with local-first execution, access policies, typed workflows, and inspectable receipts.
 
 ## Capabilities and Constraints
-Chat, images, video, speech, transcription, decisions, embeddings and rerank depend on configured engines and providers. Site claims must track implementation evidence. No engine installation claim. No unsupported SDK method coverage claim. Gateway repository and live services are read-only. Name is centralized and matches the app product identity. GitHub release URL remains a labeled placeholder until launch. Noindex and no announcements until launch (the gateway repository is still private).
+Chat, images, video, speech, transcription, decisions, embeddings and rerank depend on configured engines and providers. Site claims must track implementation evidence. No engine installation claim. No unsupported SDK method coverage claim. Gateway repository and live services are read-only. Name is centralized and matches the app product identity. The gateway repository is private: the site shows no clone command, and Quick start carries an Early access block. UNVERIFIED: the early-access contact in src/config.ts is a placeholder. Noindex and no announcements until launch.
 
 ## Brand Commitments
-Brief sets craft references: t3.codes, ishoo.app, claude.com/product/claude-code. Restraint, typography, space, useful motion. No testimonials, stars, or user counts.
+Brief sets craft references: t3.codes, ishoo.app, claude.com/product/claude-code. Restraint, typography, space. The mark is the copper curl. No testimonials, stars, or user counts.
 
 ## Evidence on Hand
 Gateway README and docs, strategy §§1–2, source-backed discovery and capabilities, isolated seeded gateway UI captures. No invented live statuses, costs, timings or outputs.

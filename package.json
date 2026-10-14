@@ -5,20 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview --host 127.0.0.1",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "assets": "node scripts/brand-assets.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/dm-sans": "^5.3.0",
-    "@fontsource-variable/newsreader": "^5.3.0",
+    "@astrojs/markdown-remark": "^7.3.2",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.6",
+    "marked": "^18.1.1",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "lighthouse": "^13.5.0",
+    "pagefind": "^1.5.2",
     "playwright": "^1.63.0"
   },
   "engines": {

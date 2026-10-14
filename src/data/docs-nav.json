@@ -1,0 +1,67 @@
+[
+ {
+  "title": "Start here",
+  "pages": [
+   "index",
+   "start/install",
+   "start/first-run"
+  ]
+ },
+ {
+  "title": "Use a gateway",
+  "pages": [
+   "use/index",
+   "use/try",
+   "use/library",
+   "use/apps-and-keys",
+   "use/usage",
+   "use/when-something-fails"
+  ]
+ },
+ {
+  "title": "Run a gateway",
+  "pages": [
+   "operate/engines",
+   "operate/invite-people",
+   "operate/security",
+   "operate/upgrade-and-backup",
+   "operate/troubleshooting"
+  ]
+ },
+ {
+  "title": "Build with the API",
+  "pages": [
+   "api/index",
+   "api/openai",
+   "api/anthropic",
+   "api/ollama",
+   "api/a1111",
+   "api/media-jobs",
+   "api/mcp",
+   "api/clients"
+  ]
+ },
+ {
+  "title": "Concepts",
+  "pages": [
+   "concepts/people-and-roles",
+   "concepts/apps-and-keys",
+   "concepts/access-plans",
+   "concepts/categories",
+   "concepts/engines-and-models",
+   "concepts/providers-and-spend",
+   "concepts/receipts-and-usage",
+   "concepts/library-and-retention",
+   "concepts/privacy",
+   "concepts/prompt-saving"
+  ]
+ },
+ {
+  "title": "Reference",
+  "pages": [
+   "reference/configuration",
+   "reference/errors",
+   "reference/glossary"
+  ]
+ }
+]

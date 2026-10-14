@@ -1,6 +1,10 @@
-# AI gateway product preview
+# Azizam
 
-Static marketing site. Unlisted prelaunch preview, not an AI API endpoint.
-Product claims and setup requirements: /#features and /#install.
-Compatibility caveats: /#faq.
-No live generation, account creation, payments, or gateway access occurs on this site.
+Azizam is a self-hosted AI gateway. It puts the AI engines you run, and any paid providers you choose, behind one OpenAI-compatible address, with its own key, access plan and spend cap for each person and app.
+
+Unlisted prelaunch preview. Azizam is in private preview. This site is static and is not an AI API endpoint.
+
+- Examples (real recorded requests): /examples/
+- Documentation: /docs/
+- API guide (OpenAI, Anthropic, Ollama, A1111 shapes; media jobs; MCP): /docs/api/
+- Setup guide: /docs/start/install/
