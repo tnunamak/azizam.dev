@@ -80,7 +80,7 @@ for (const [path, { html }] of pages) {
   const engines = text.match(ENGINE_NAMES)?.[0];
   if (engines) assert.ok(path === '/docs/start/install/' && /litellm/i.test(engines), `${path}: engine name "${engines}"`);
   assert.ok(!/git clone/i.test(text), `${path}: no git clone`);
-  assert.ok(!/github\.com/i.test(text), `${path}: no github.com link`);
+  assert.ok(!/github\.com\/tnunamak\/azizam/i.test(text), path + ': no link to the private gateway repository');
   for (const img of html.matchAll(/<img\b[^>]*>/g)) assert.match(img[0], /\salt=/, `${path}: img without alt`);
 }
 // Every internal link and anchor resolves.
@@ -99,20 +99,24 @@ for (const [path, { html }] of pages) if (path.startsWith('/docs/')) {
   assert.ok(!/href="\/(showcase|openapi\.json|gateway\/)/.test(html), `${path}: link into a live gateway`);
 }
 const docsCount = [...pages.keys()].filter((p) => p.startsWith('/docs/')).length;
-assert.equal(docsCount, 35, 'All 35 docs pages are built');
+const guideData = JSON.parse(await readFile(new URL('../src/data/app-guides.json', import.meta.url), 'utf8'));
+assert.equal(docsCount, 35 + guideData.apps.length + 2, 'Existing docs and generated connection pages are built');
 assert.ok((await readdir(join(dist, 'pagefind'))).includes('pagefind.js'), 'Pagefind index exists');
 summary.push({ pages: pages.size, docs: docsCount, internalLinksChecked: links });
 
 // ---- Browser checks ----------------------------------------------------------------------
 await waitForQuietMachine();
 const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox'] });
-const TAP = 'button, summary, .btn, .site-nav a, .site-disclosure nav a, .brand, .foot-links a, .chips a, .pager a, .docs-menu a, .toc-inline a, .search-open, .copy-btn, .code-bar .copy';
+const TAP = 'button, summary, .btn, .site-nav a, .site-disclosure nav a, .brand, .foot-links a, .chips a, .pager a, .docs-menu a, .docs-route-mobile-nav a, .toc-inline a, .search-open, .copy-btn, .code-bar .copy';
 const SAMPLES = [
   { name: 'home', path: '/' },
   { name: 'examples', path: '/examples/' },
   { name: 'docs', path: '/docs/' },
   { name: 'docs-page', path: '/docs/concepts/access-plans/' },
   { name: 'docs-install', path: '/docs/start/install/' },
+  { name: 'docs-connect', path: '/docs/connect/' },
+  { name: 'docs-client', path: '/docs/connect/open-webui/' },
+  { name: 'docs-mcp', path: '/docs/mcp/' },
 ];
 const results = [];
 try {
@@ -188,11 +192,29 @@ try {
           assert.match(await page.locator('#chat-default').innerText(), /Rayleigh scattering/);
           assert.equal(await page.locator('.site-nav a[aria-current]').first().getAttribute('aria-current'), 'page');
         }
-        if (sample.name.startsWith('docs')) {
+        if (['docs', 'docs-page', 'docs-install'].includes(sample.name)) {
           assert.equal(await page.locator('.docs-shell .docs-nav a').count(), 35, `${label}: sidebar lists every page`);
           if (width === 1440) assert.equal(await page.locator('.docs-nav a[aria-current="page"]').count(), 1);
           assert.equal(await page.locator('.site-header').count(), 1);
           assert.equal(await page.locator('footer.foot').count(), 1);
+        }
+        if (['docs-connect', 'docs-client', 'docs-mcp'].includes(sample.name)) {
+          assert.equal(await page.locator('.docs-route-sidebar a').count(), 3, 'desktop section navigation ' + label);
+          assert.equal(await page.locator('.docs-route-mobile-nav a').count(), 3, 'mobile section navigation ' + label);
+          assert.equal(await page.locator('.site-header').count(), 1);
+          assert.equal(await page.locator('footer.foot').count(), 1);
+        }
+        if (sample.name === 'docs-connect') {
+          assert.equal(await page.locator('.endpoint-list > div').count(), 4, 'protocol paths ' + label);
+          assert.equal(await page.locator('.client-guide-list a').count(), guideData.apps.length, 'guide links ' + label);
+        }
+        if (sample.name === 'docs-client') {
+          assert.equal(await page.locator('.guide-instructions').count(), 2, 'key and MCP instructions ' + label);
+          assert.ok(await page.locator('.guide-fields').count() >= 1, 'connection fields ' + label);
+        }
+        if (sample.name === 'docs-mcp') {
+          assert.equal(await page.locator('.mcp-tools > section').count(), 8, 'MCP tool definitions ' + label);
+          assert.equal(await page.locator('.mcp-client-note').count(), guideData.apps.filter((app) => app.mcp).length, 'MCP client notes ' + label);
         }
         if (sample.name === 'docs-page' || sample.name === 'docs-install') {
           if (width === 1440) assert.ok(await page.locator('.toc a').count() >= 2, `${label}: on-page contents`);

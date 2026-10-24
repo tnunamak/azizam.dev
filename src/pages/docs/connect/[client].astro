@@ -1,0 +1,26 @@
+---
+import DocsSection from '../../../layouts/DocsSection.astro';
+import GuideInstructions from '../../../components/GuideInstructions.astro';
+import guides from '../../../data/app-guides.json';
+
+export function getStaticPaths() {
+  return guides.apps.map((app) => ({
+    params: { client: app.id },
+    props: { app, checked: guides.checked },
+  }));
+}
+
+const { app, checked } = Astro.props;
+const description = 'Setup steps for ' + app.name + ' with this Azizam gateway.';
+---
+<DocsSection
+  title={app.name + ' setup · Azizam docs'}
+  heading={app.name}
+  description={description}
+  activeSection="connect"
+>
+  <p class="client-kind">{app.kind}</p>
+  {app.key && <GuideInstructions title="Connect with a key" checked={checked} guide={app.key} />}
+  {app.mcp && <GuideInstructions title="Connect with MCP" checked={checked} guide={app.mcp} />}
+  <p class="all-guides"><a href="/docs/connect/">All client guides</a></p>
+</DocsSection>

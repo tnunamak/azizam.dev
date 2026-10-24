@@ -1,9 +1,11 @@
 ---
 title: API overview
-summary: Choose a protocol and base URL, authenticate with an app key, and handle errors.
+summary: Open the API reference served by your own gateway, then choose a protocol.
 ---
 
 # API overview
+
+Each gateway serves its own API reference at <code>https://&lt;your gateway&gt;/docs</code>. Replace <code>&lt;your gateway&gt;</code> with the host you use to reach that gateway.
 
 The gateway speaks several protocols at one address. Use the protocol your app or SDK already knows.
 
@@ -14,7 +16,7 @@ Retrieve `openapi.json` from your own gateway at `$AZIZAM_BASE_URL/openapi.json`
 Run the following setup in Bash. The shell examples require curl with `--fail-with-body` support; JSON-encoding examples also require Python 3. Run Bash first if your current shell is different.
 
 ```bash
-export AZIZAM_BASE_URL='http://127.0.0.1:5000'
+export AZIZAM_BASE_URL='https://<your gateway>'
 read -r -s -p 'App key: ' AZIZAM_API_KEY; printf '\n'; export AZIZAM_API_KEY
 export AZIZAM_MODEL='my-chat'
 ```

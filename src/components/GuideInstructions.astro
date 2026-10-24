@@ -1,0 +1,53 @@
+---
+interface Guide {
+  status: 'documented' | 'unverified';
+  steps: string[];
+  fields?: { label: string; value: string; group?: string }[];
+  docs?: string;
+  note?: string;
+  auth?: string;
+}
+
+interface Props {
+  title: string;
+  checked: string;
+  guide: Guide;
+  headingLevel?: 2 | 3 | 4;
+}
+
+const { title, checked, guide, headingLevel = 2 } = Astro.props;
+const status = guide.status === 'documented' ? 'Documented' : 'Unverified';
+const delimiter = String.fromCharCode(96);
+const codeSegments = new RegExp('(' + delimiter + '[^' + delimiter + ']+' + delimiter + ')', 'g');
+const Heading = headingLevel === 2 ? 'h2' : headingLevel === 3 ? 'h3' : 'h4';
+---
+<section class="guide-instructions">
+  <Heading>{title}</Heading>
+  <p class="guide-meta">{status} <span aria-hidden="true">·</span> Checked {checked}</p>
+  {guide.auth && <p>Authentication: {guide.auth === 'sign-in' ? 'Sign in' : 'Sign in or an app key'}.</p>}
+  {guide.steps.length > 0 && (
+    <ol>
+      {guide.steps.map((step) => (
+        <li>
+          {step.split(codeSegments).map((part) =>
+            part.startsWith(delimiter) && part.endsWith(delimiter)
+              ? <code>{part.slice(1, -1)}</code>
+              : part
+          )}
+        </li>
+      ))}
+    </ol>
+  )}
+  {guide.fields && guide.fields.length > 0 && (
+    <dl class="guide-fields">
+      {guide.fields.map((field) => (
+        <div>
+          <dt>{field.group ? field.group + ' · ' + field.label : field.label}</dt>
+          <dd><code>{field.value}</code></dd>
+        </div>
+      ))}
+    </dl>
+  )}
+  {guide.note && <p class="guide-note">{guide.note}</p>}
+  {guide.docs && <p class="guide-source"><a href={guide.docs} rel="noreferrer">Source documentation</a></p>}
+</section>

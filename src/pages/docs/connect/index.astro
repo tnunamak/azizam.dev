@@ -1,0 +1,38 @@
+---
+import DocsSection from '../../../layouts/DocsSection.astro';
+import guides from '../../../data/app-guides.json';
+
+const kinds = [...new Set(guides.apps.map((app) => app.kind))];
+---
+<DocsSection
+  title="Connect an app · Azizam docs"
+  heading="Connect an app"
+  description="Set up an app with an Azizam protocol address and an app key."
+  activeSection="connect"
+>
+  <p>Use the protocol your app supports. Replace <code>&lt;your gateway&gt;</code> with the HTTPS address the owner gave you.</p>
+
+  <h2>Base paths</h2>
+  <dl class="endpoint-list">
+    <div><dt>OpenAI-compatible</dt><dd><code>{'https://<your gateway>/openai/v1'}</code></dd></div>
+    <div><dt>Anthropic-compatible</dt><dd><code>{'https://<your gateway>/anthropic'}</code></dd></div>
+    <div><dt>Ollama-compatible</dt><dd><code>{'https://<your gateway>/ollama'}</code></dd></div>
+    <div><dt>MCP</dt><dd><code>{'https://<your gateway>/mcp'}</code></dd></div>
+  </dl>
+
+  <h2>Apps, keys and trusted addresses</h2>
+  <p>An App is something that connects to the gateway. A Key is the secret an app uses. The owner can add trusted addresses to an App; requests from those addresses use that App’s access plan without a key. A sent key always takes precedence.</p>
+  <p>Guide steps come from each app’s documentation or source. “Unverified” marks a flow that uses third-party guidance. These guides were checked {guides.checked}.</p>
+
+  <h2>Client guides</h2>
+  {kinds.map((kind) => (
+    <section class="client-guide-list">
+      <h3>{kind}</h3>
+      <ul>
+        {guides.apps.filter((app) => app.kind === kind).map((app) => (
+          <li><a href={'/docs/connect/' + app.id + '/'}>{app.name}</a></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</DocsSection>

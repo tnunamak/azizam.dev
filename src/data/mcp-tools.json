@@ -1,0 +1,42 @@
+[
+  {
+    "name": "capabilities",
+    "title": "List gateway capabilities",
+    "description": "List the media workflows, stable aliases (image, video, music, sfx, ...) and operations (speech) this gateway can run. Pass `target` for one entry's typed inputs, outputs and expected run time. Pass `query` to filter."
+  },
+  {
+    "name": "run",
+    "title": "Run a workflow or media operation",
+    "description": "Run a workflow, stable alias or `speech`. `inputs` follow the schema from `capabilities` with `target`. Fast work returns the result. Slow work (video, long music) returns a `job_id` after `wait_seconds`; call `job` to continue. Media comes back as signed URLs. Image and video inputs take a data URI or an asset id from an earlier result."
+  },
+  {
+    "name": "job",
+    "title": "Poll, wait for or cancel a job",
+    "description": "Get the status of a `job_id` from `run`, optionally waiting; returns the result when done. `cancel` stops it."
+  },
+  {
+    "name": "rename_app",
+    "title": "Rename one of your apps",
+    "description": "Give one of the signed-in person's own apps a new name. Only the name changes: its keys and access stay."
+  },
+  {
+    "name": "rename_key",
+    "title": "Rename one of your keys",
+    "description": "Give an active key of one of the signed-in person's own apps a new name. Only the label changes: the key still works and no new key is made."
+  },
+  {
+    "name": "stt_measurement",
+    "title": "Long-audio operator settings and measurement",
+    "description": "Owner only (MCP OAuth). Configure saved cutting settings independently, or fetch public human-transcribed samples and measure through the gateway. Start returns a durable job id; status reports progress, deletions by piece length, seam excess versus noise and a recommendation. Cancel stops work. Apply is an explicit separate action; configure/apply require the current registry revision from options. Public hosting does not establish reuse rights. Review the selected samples' audio and transcript rights; not-stated means the source states no reuse permission."
+  },
+  {
+    "name": "requests",
+    "title": "Read or delete your request history",
+    "description": "List, read or delete your own request history. Actions: list, get, delete, delete_all."
+  },
+  {
+    "name": "retention",
+    "title": "Read or set your request history setting",
+    "description": "Read your request history setting, or set it when this connection has privacy permission. Actions: mine_get, mine_set."
+  }
+]

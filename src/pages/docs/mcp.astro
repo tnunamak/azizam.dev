@@ -1,0 +1,37 @@
+---
+import DocsSection from '../../layouts/DocsSection.astro';
+import GuideInstructions from '../../components/GuideInstructions.astro';
+import guides from '../../data/app-guides.json';
+import tools from '../../data/mcp-tools.json';
+
+const clients = guides.apps.filter((app) => app.mcp);
+---
+<DocsSection
+  title="MCP tools · Azizam docs"
+  heading="MCP tools"
+  description="Tools and app setup notes for the MCP endpoint this gateway offers."
+  activeSection="mcp"
+>
+  <p>The MCP endpoint is <code>{'https://<your gateway>/mcp'}</code>. Apps can use an app key. Sign-in is available when the gateway has a public HTTPS address configured.</p>
+  <p>Owner-only tools need the owner. The long-audio measurement tool appears only when the gateway has it wired. An owner may also see a ledger action under requests.</p>
+
+  <h2>Tools</h2>
+  <div class="mcp-tools">
+    {tools.map((tool) => (
+      <section>
+        <h3>{tool.title}</h3>
+        <p class="tool-name"><code>{tool.name}</code>{tool.description.toLowerCase().startsWith('owner only') && <span class="guide-meta"> · Owner only</span>}</p>
+        <p>{tool.description}</p>
+      </section>
+    ))}
+  </div>
+
+  <h2>MCP notes for each app</h2>
+  <p>These notes come from the same client-guide data used on Connect.</p>
+  {clients.map((app) => (
+    <section class="mcp-client-note">
+      <h3><a href={'/docs/connect/' + app.id + '/'}>{app.name}</a></h3>
+      <GuideInstructions title="MCP setup" headingLevel={4} checked={guides.checked} guide={app.mcp} />
+    </section>
+  ))}
+</DocsSection>

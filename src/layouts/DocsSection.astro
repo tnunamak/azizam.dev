@@ -1,0 +1,43 @@
+---
+import Base from './Base.astro';
+import '../styles/docs.css';
+
+interface Props {
+  title: string;
+  heading: string;
+  description: string;
+  activeSection: 'connect' | 'mcp' | 'api';
+}
+
+const { title, heading, description, activeSection } = Astro.props;
+const sections = [
+  { id: 'connect', label: 'Connect', href: '/docs/connect/' },
+  { id: 'mcp', label: 'MCP tools', href: '/docs/mcp/' },
+  { id: 'api', label: 'API reference', href: '/docs/api/' },
+];
+---
+<Base title={title} description={description} bodyClass="docs">
+  <div class="docs-route wrap">
+    <nav class="docs-route-sidebar" aria-label="Documentation sections">
+      <p class="docs-route-nav-label">Sections</p>
+      <ul>
+        {sections.map((section) => (
+          <li><a href={section.href} aria-current={activeSection === section.id ? 'true' : undefined}>{section.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <nav class="docs-route-mobile-nav" aria-label="Documentation sections">
+      <ul>
+        {sections.map((section) => (
+          <li><a href={section.href} aria-current={activeSection === section.id ? 'true' : undefined}>{section.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <main id="content" class="docs-route-main" tabindex="-1">
+      <article class="prose docs-route-prose" data-pagefind-body>
+        <h1>{heading}</h1>
+        <slot />
+      </article>
+    </main>
+  </div>
+</Base>
