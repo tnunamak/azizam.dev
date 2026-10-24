@@ -12,42 +12,67 @@ interface Props {
   title: string;
   checked: string;
   guide: Guide;
+  clientName: string;
   headingLevel?: 2 | 3 | 4;
 }
 
-const { title, checked, guide, headingLevel = 2 } = Astro.props;
+const { title, checked, guide, clientName, headingLevel = 2 } = Astro.props;
 const status = guide.status === 'documented' ? 'Documented' : 'Unverified';
 const delimiter = String.fromCharCode(96);
 const codeSegments = new RegExp('(' + delimiter + '[^' + delimiter + ']+' + delimiter + ')', 'g');
+const placeholders: Record<string, string> = {
+  openai_url: 'https://<your gateway>/openai/v1',
+  anthropic_url: 'https://<your gateway>/anthropic',
+  mcp_url: 'https://<your gateway>/mcp',
+  key: '<your key>',
+  chat_model: '<model name>',
+  transcription_model: '<model name>',
+};
+const renderGuideText = (value: string) => value
+  .replace(/\{([A-Za-z_][A-Za-z0-9_]*)\}/g, (token, name: string) => placeholders[name] ?? token)
+  .replace(/\bapp keys?\b/gi, (phrase) => `${phrase[0] === 'A' ? 'K' : 'k'}${phrase.endsWith('s') ? 'eys' : 'ey'}`);
 const Heading = headingLevel === 2 ? 'h2' : headingLevel === 3 ? 'h3' : 'h4';
 ---
 <section class="guide-instructions">
   <Heading>{title}</Heading>
   <p class="guide-meta">{status} <span aria-hidden="true">·</span> Checked {checked}</p>
-  {guide.auth && <p>Authentication: {guide.auth === 'sign-in' ? 'Sign in' : 'Sign in or an app key'}.</p>}
+  {guide.auth && <p>Authentication: {guide.auth === 'sign-in' ? 'Sign in' : 'Sign in or a key'}.</p>}
   {guide.steps.length > 0 && (
     <ol>
-      {guide.steps.map((step) => (
-        <li>
-          {step.split(codeSegments).map((part) =>
-            part.startsWith(delimiter) && part.endsWith(delimiter)
-              ? <code>{part.slice(1, -1)}</code>
-              : part
-          )}
-        </li>
-      ))}
+      {guide.steps.map((step) => {
+        const parts = renderGuideText(step).split(codeSegments);
+        const isWarning = /^\s*(?:warning\b|do not\b|don't\b|never\b|avoid\b)/i.test(step);
+        return (
+          <li>
+            {isWarning ? (
+              <aside class="guide-warning" role="note">
+                <strong>Warning:</strong>{' '}
+                {parts.map((part) =>
+                  part.startsWith(delimiter) && part.endsWith(delimiter)
+                    ? <code>{renderGuideText(part.slice(1, -1))}</code>
+                    : renderGuideText(part)
+                )}
+              </aside>
+            ) : parts.map((part) =>
+              part.startsWith(delimiter) && part.endsWith(delimiter)
+                ? <code>{renderGuideText(part.slice(1, -1))}</code>
+                : renderGuideText(part)
+            )}
+          </li>
+        );
+      })}
     </ol>
   )}
   {guide.fields && guide.fields.length > 0 && (
     <dl class="guide-fields">
       {guide.fields.map((field) => (
         <div>
-          <dt>{field.group ? field.group + ' · ' + field.label : field.label}</dt>
-          <dd><code>{field.value}</code></dd>
+          <dt>{field.group ? renderGuideText(field.group) + ' · ' + renderGuideText(field.label) : renderGuideText(field.label)}</dt>
+          <dd><code>{renderGuideText(field.value)}</code></dd>
         </div>
       ))}
     </dl>
   )}
-  {guide.note && <p class="guide-note">{guide.note}</p>}
-  {guide.docs && <p class="guide-source"><a href={guide.docs} rel="noreferrer">Source documentation</a></p>}
+  {guide.note && <p class="guide-note">{renderGuideText(guide.note)}</p>}
+  {guide.docs && <p class="guide-source"><a href={guide.docs} rel="noreferrer">{clientName}'s own documentation</a></p>}
 </section>

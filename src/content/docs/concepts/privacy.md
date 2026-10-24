@@ -21,7 +21,7 @@ Library shows a saved prompt only to the person who made the creation. When the 
 
 **Download with details** includes the saved prompt and workflow. Only the person with that saved prompt can download it.
 
-A personal app key can read its owner's saved prompts only when that same person created the key. A personal key created by someone else does not act as that person. Protect an owner-created personal key as you would your password. See [Apps and keys](apps-and-keys.md).
+A personal key can read its owner's saved prompts only when that same person created it. A personal key created by someone else does not act as that person. Protect an owner-created personal key as you would your password. See [Apps and keys](apps-and-keys.md).
 
 ## The operator can read the storage
 

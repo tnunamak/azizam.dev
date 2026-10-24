@@ -31,7 +31,7 @@ Errors from the browser interface's routes include a layer in `error.details.lay
 ## An app cannot connect
 
 - Check the base URL. Do not add a second `/v1` or `/api`.
-- Check that the key is an app key, not an admin key or a provider key.
+- Check that you used the key created for the app, not an admin key or a provider key.
 - A `127.0.0.1` address points to the device or container that sends the request. Use an address that reaches the gateway from there.
 
 ## A request is refused

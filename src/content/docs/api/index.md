@@ -17,12 +17,12 @@ Run the following setup in Bash. The shell examples require curl with `--fail-wi
 
 ```bash
 export AZIZAM_BASE_URL='https://<your gateway>'
-read -r -s -p 'App key: ' AZIZAM_API_KEY; printf '\n'; export AZIZAM_API_KEY
+read -r -s -p 'Key: ' AZIZAM_API_KEY; printf '\n'; export AZIZAM_API_KEY
 export AZIZAM_MODEL='my-chat'
 ```
 
 - `AZIZAM_BASE_URL` is the gateway address, with no trailing slash. Use the address the owner gave you.
-- `AZIZAM_API_KEY` is your app key. Do not use an admin key or a provider's key.
+- `AZIZAM_API_KEY` is the key for your app. Do not use an admin key or a provider's key.
 - `AZIZAM_MODEL` is a model name that your key can use. `my-chat` is an example. Find real names with the request below.
 
 Keep keys out of source control, shared logs and screenshots.

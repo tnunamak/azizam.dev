@@ -12,7 +12,7 @@ const clients = guides.apps.filter((app) => app.mcp);
   description="Tools and app setup notes for the MCP endpoint this gateway offers."
   activeSection="mcp"
 >
-  <p>The MCP endpoint is <code>{'https://<your gateway>/mcp'}</code>. Apps can use an app key. Sign-in is available when the gateway has a public HTTPS address configured.</p>
+  <p>The MCP endpoint is <code>{'https://<your gateway>/mcp'}</code>. Apps can use a key. Sign-in is available when the gateway has a public HTTPS address configured.</p>
   <p>Owner-only tools need the owner. The long-audio measurement tool appears only when the gateway has it wired. An owner may also see a ledger action under requests.</p>
 
   <h2>Tools</h2>
@@ -31,7 +31,7 @@ const clients = guides.apps.filter((app) => app.mcp);
   {clients.map((app) => (
     <section class="mcp-client-note">
       <h3><a href={'/docs/connect/' + app.id + '/'}>{app.name}</a></h3>
-      <GuideInstructions title="MCP setup" headingLevel={4} checked={guides.checked} guide={app.mcp} />
+      <GuideInstructions title="MCP setup" headingLevel={4} checked={guides.checked} guide={app.mcp} clientName={app.name} />
     </section>
   ))}
 </DocsSection>

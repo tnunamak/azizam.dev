@@ -19,7 +19,7 @@ Setup permission does not allow anyone to run requests without a key.
 
 ## Keys
 
-- **App keys** run requests. Give each app its own key, so you can revoke one without breaking the others.
+- **Keys** run requests. Give each app its own key, so you can revoke one without breaking the others.
 - **Admin keys** change the gateway's configuration. Keep them out of apps.
 
 Protect every key as you would a password. Do not put keys in URLs, screenshots, shared logs or support reports.

@@ -13,17 +13,17 @@ An app is a client that uses the gateway. A key proves that a request may act as
 - A **service app** belongs to a service account.
 - A **session app** is how the browser interface acts for a signed-in person. It has no key, and a key for it is not accepted.
 
-## App keys and admin keys
+## Keys and admin keys
 
-App keys run requests. Admin keys change the gateway's configuration. Neither one can do the other's job.
+Keys used by apps run requests. Admin keys change the gateway's configuration. Neither one can do the other's job.
 
-The gateway shows a new app key once, when it is created. It stores only a hash and a short prefix. Key lists never show the full key. Save the key somewhere safe, and never put it in a public page or a repository.
+The gateway shows a new key once, when it is created. It stores only a hash and a short prefix. Key lists never show the full key. Save it somewhere safe, and never put it in a public page or a repository.
 
 A revoked or expired key is refused. A key also needs an enabled app and a valid access plan.
 
 ## A personal key can read saved prompts
 
-A personal app key acts as its person only when that same person created it. Anyone who holds such a key can read that person's saved prompts.
+A personal key acts as its person only when that same person created it. Anyone who holds such a key can read that person's saved prompts.
 
 A service key, or a personal key that someone else created, does not act as a person. Prompts sent with it are not saved to anyone's prompt memory.
 

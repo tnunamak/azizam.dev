@@ -59,7 +59,7 @@ Use the same settings as before. For example, set the same `AZIZAM_PORT` if you 
 2. If you use a reverse proxy, check the public address too.
 3. Sign in as the owner, and check your engines and model names.
 4. On **Home**, select **Check connection**.
-5. Send a request from an app with an app key.
+5. Send a request from an app with its key.
 
 A healthy endpoint alone does not prove that an app's engine, model and key work. Keep the backup until you have checked the new version. If a check fails, keep the logs and the backup. Do not overwrite your only copy of the old data.
 

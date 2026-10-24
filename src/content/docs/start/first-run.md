@@ -5,7 +5,7 @@ summary: Create the owner account, connect a chat engine, and get a first reply 
 
 # First run
 
-This tutorial takes a new gateway to its first reply. You create the owner account, connect one chat engine, create an app key and send a message.
+This tutorial takes a new gateway to its first reply. You create the owner account, connect one chat engine, create a key for an app and send a message.
 
 Before you start, [install Azizam](install.md) and make sure your chat engine is running with a model loaded.
 
@@ -35,30 +35,30 @@ Check the engine's health settings as well. For an OpenAI-compatible engine, a m
 
 The engine and its model names are settings. You can change or replace them later without changing the gateway.
 
-## 3. Create an app key
+## 3. Create a key
 
 Open **Home**. Choose the app you want to connect, then select **Create key for** that app.
 
 Save the key when it appears. It is shown only once.
 
-Use app keys in apps. Do not put an admin key in an app.
+Use a key in an app. Do not put an admin key in an app.
 
 ## 4. Get a first reply
 
 In your app, use these settings:
 
 - Base URL: `http://127.0.0.1:5000/openai/v1`
-- API key: the app key you saved
+- API key: the key you saved
 - Model: `my-chat`
 
-Send a short message from your app, or use the curl request below. A reply means that the app key, gateway, model mapping and engine work together; a gateway health check alone does not establish this.
+Send a short message from your app, or use the curl request below. A reply means that the key, gateway, model mapping and engine work together; a gateway health check alone does not establish this.
 
 ### Send the same request with curl
 
 Run this example in Bash on the gateway computer. If your terminal uses another shell, run bash first. It reads the key without echoing it and asks for a streamed reply. Your curl must support --fail-with-body.
 
 ```bash
-read -r -s -p 'App key: ' AZIZAM_API_KEY && printf '\n' &&
+read -r -s -p 'Key: ' AZIZAM_API_KEY && printf '\n' &&
 curl --no-buffer --fail-with-body --silent --show-error \
   http://127.0.0.1:5000/openai/v1/chat/completions \
   -H "Authorization: Bearer $AZIZAM_API_KEY" \
@@ -71,7 +71,7 @@ The reply arrives as a stream of events. The text is in `choices[0].delta.conten
 
 ### If there is no reply
 
-- **The request is refused.** Check that you used an app key, not an admin key, and that you copied all of it.
+- **The request is refused.** Check that you used the key created for the app, not an admin key, and that you copied all of it.
 - **The model is not found.** Open **Models** to see the model names your key can use.
 - **The engine is busy or starting.** Check **Status**, then try again.
 

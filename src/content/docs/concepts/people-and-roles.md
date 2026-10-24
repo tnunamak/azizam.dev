@@ -12,7 +12,7 @@ Two main controls are roles and access plans. An active category policy can add 
 - **Roles** control who can administer the gateway.
 - **Access plans** control which requests an app can make. See [Access plans](access-plans.md).
 
-An app key never becomes an admin key, even when the person who holds it is an administrator.
+A key never becomes an admin key, even when the person who holds it is an administrator.
 
 ## Roles
 

@@ -7,7 +7,7 @@ summary: Send Messages requests with Anthropic SDKs, and know what is translated
 
 Set your SDK's base URL to `$AZIZAM_BASE_URL/anthropic`. The Messages route is `/anthropic/v1/messages`, and `/v1/messages` also works.
 
-Send your app key as `x-api-key` or as a bearer token. Set the environment variables in the [API overview](index.md#set-up-your-environment) first.
+Send your key as `x-api-key` or as a bearer token. Set the environment variables in the [API overview](index.md#set-up-your-environment) first.
 
 ## Messages with curl
 

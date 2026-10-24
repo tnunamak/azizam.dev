@@ -18,9 +18,12 @@ const description = 'Setup steps for ' + app.name + ' with this Azizam gateway.'
   heading={app.name}
   description={description}
   activeSection="connect"
+  clientGuides={guides.apps.map(({ id, name }) => ({ id, name }))}
+  currentClientId={app.id}
+  breadcrumbs={[{ label: 'Docs', href: '/docs/' }, { label: 'Connect', href: '/docs/connect/' }, { label: app.name }]}
 >
   <p class="client-kind">{app.kind}</p>
-  {app.key && <GuideInstructions title="Connect with a key" checked={checked} guide={app.key} />}
-  {app.mcp && <GuideInstructions title="Connect with MCP" checked={checked} guide={app.mcp} />}
+  {app.key && <GuideInstructions title="Connect with a key" checked={checked} guide={app.key} clientName={app.name} />}
+  {app.mcp && <GuideInstructions title="Connect with MCP" checked={checked} guide={app.mcp} clientName={app.name} />}
   <p class="all-guides"><a href="/docs/connect/">All client guides</a></p>
 </DocsSection>

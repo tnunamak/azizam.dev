@@ -7,7 +7,7 @@ summary: Use Ollama clients for chat, generate and embeddings, without model fil
 
 For a client that adds `/api` to its base URL, use `$AZIZAM_BASE_URL/ollama`. For a client that always calls `/api` at the root of the host, use `$AZIZAM_BASE_URL`.
 
-Send your app key as a bearer token or as `x-api-key`. The gateway needs a key, unless the owner allows anonymous model discovery for `tags` and `version`. Set the environment variables in the [API overview](index.md#set-up-your-environment) first.
+Send your key as a bearer token or as `x-api-key`. The gateway needs a key, unless the owner allows anonymous model discovery for `tags` and `version`. Set the environment variables in the [API overview](index.md#set-up-your-environment) first.
 
 ## Chat with curl
 

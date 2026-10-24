@@ -11,7 +11,7 @@ A plan can limit protocols, workflows, models, engines and capabilities. It also
 
 ## Which plan applies
 
-For a request with an app key, the gateway uses the first of these that is set:
+For a request with a key, the gateway uses the first of these that is set:
 
 1. The plan set on the key.
 2. The app's default plan.

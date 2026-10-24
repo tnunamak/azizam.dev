@@ -75,6 +75,8 @@ for (const [path, { html }] of pages) {
   assert.match(html, /<meta name="robots" content="noindex, nofollow"/, `${path}: noindex`);
   assert.ok(!/fish/i.test(html.replace(/<path d="[^"]*"/g, '')), `${path}: no fish`);
   const text = html.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/g, '');
+  assert.ok(!/(?<!\$)\{[A-Za-z_][A-Za-z0-9_]*\}/.test(html), `${path}: unrendered template token`);
+  assert.ok(!/\bapp keys?\b/i.test(text), `${path}: use "key" in rendered docs`);
   assert.ok(!PRIVATE.test(text), `${path}: private host or name: ${text.match(PRIVATE)?.[0]}`);
   assert.ok(!INVENTED.test(text), `${path}: invented proof`);
   const engines = text.match(ENGINE_NAMES)?.[0];
@@ -199,18 +201,31 @@ try {
           assert.equal(await page.locator('footer.foot').count(), 1);
         }
         if (['docs-connect', 'docs-client', 'docs-mcp'].includes(sample.name)) {
-          assert.equal(await page.locator('.docs-route-sidebar a').count(), 3, 'desktop section navigation ' + label);
-          assert.equal(await page.locator('.docs-route-mobile-nav a').count(), 3, 'mobile section navigation ' + label);
+          assert.equal(await page.locator('.docs-route-sidebar > ul > li > a').count(), 3, 'desktop section navigation ' + label);
+          assert.equal(await page.locator('.docs-route-mobile-nav > .docs-route-section-links > li > a').count(), 3, 'mobile section navigation ' + label);
           assert.equal(await page.locator('.site-header').count(), 1);
           assert.equal(await page.locator('footer.foot').count(), 1);
         }
         if (sample.name === 'docs-connect') {
           assert.equal(await page.locator('.endpoint-list > div').count(), 4, 'protocol paths ' + label);
           assert.equal(await page.locator('.client-guide-list a').count(), guideData.apps.length, 'guide links ' + label);
+          assert.equal(await page.locator('.connect-steps li').count(), 3, 'three connect steps ' + label);
+          assert.equal(await page.locator('.connect-definitions dt').count(), 3, 'three key definitions ' + label);
+          assert.equal(await page.locator('.docs-route-sidebar .docs-route-client-links a').count(), guideData.apps.length, 'desktop client guide links ' + label);
+          assert.equal(await page.locator('.docs-route-mobile-nav .docs-route-client-menu a').count(), guideData.apps.length, 'mobile client guide links ' + label);
         }
         if (sample.name === 'docs-client') {
           assert.equal(await page.locator('.guide-instructions').count(), 2, 'key and MCP instructions ' + label);
           assert.ok(await page.locator('.guide-fields').count() >= 1, 'connection fields ' + label);
+          assert.equal(await page.locator('.docs-route-sidebar .docs-route-client-links a').count(), guideData.apps.length, 'desktop client guide links ' + label);
+          assert.equal(await page.locator('.docs-route-mobile-nav .docs-route-client-menu a').count(), guideData.apps.length, 'mobile client guide links ' + label);
+          assert.match((await page.locator('.docs-route-breadcrumb').innerText()).replace(/\s+/g, ' '), /Docs\s*›\s*Connect\s*›\s*Open WebUI/);
+          assert.equal(await page.locator('.docs-route-sidebar .docs-route-client-links a[aria-current="true"]').innerText(), 'Open WebUI');
+          assert.equal(await page.locator('.docs-route-mobile-nav .docs-route-client-menu').evaluate((el) => el.open), false, 'mobile client guide list starts collapsed');
+          assert.equal(await page.locator('.guide-warning').count(), 1, 'warning is rendered as a callout');
+          assert.equal(await page.getByRole('link', { name: "Open WebUI's own documentation" }).count(), 2, 'documentation links name their client');
+          const fieldValues = await page.locator('.guide-fields code').allInnerTexts();
+          assert.deepEqual(fieldValues, ['https://<your gateway>/openai/v1', '<your key>', '<model name>']);
         }
         if (sample.name === 'docs-mcp') {
           assert.equal(await page.locator('.mcp-tools > section').count(), 8, 'MCP tool definitions ' + label);

@@ -5,7 +5,7 @@ summary: Use Chat Completions, Responses and the media routes with OpenAI SDKs.
 
 # OpenAI-compatible API
 
-Set your SDK's base URL to `$AZIZAM_BASE_URL/openai/v1` and its API key to your app key. `/v1` also works as a base URL.
+Set your SDK's base URL to `$AZIZAM_BASE_URL/openai/v1` and its API key to your key. `/v1` also works as a base URL.
 
 The routes cover chat completions, legacy completions, embeddings, models, images, audio and video. Which models and media tasks work depends on the gateway's engines and workflows.
 

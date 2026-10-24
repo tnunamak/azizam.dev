@@ -5,7 +5,7 @@ summary: Connect common chat apps, editors and image tools to your gateway.
 
 # Client setup examples
 
-Every client needs three things: the gateway address with the right base path, an app key, and a model name that the key can use. Menus and file formats change between client versions, so treat these as examples.
+Every client needs three things: the gateway address with the right base path, a key, and a model name that the key can use. Menus and file formats change between client versions, so treat these as examples.
 
 For most chat apps and editors, use the OpenAI-compatible base URL. Use the Anthropic or Ollama routes only when a client requires them.
 
@@ -25,7 +25,7 @@ curl --fail-with-body -sS "$AZIZAM_BASE_URL/openai/v1/models" \
 In **Settings → Connections → OpenAI**:
 
 - Base URL: your gateway address followed by `/openai/v1`
-- API key: your app key
+- API key: your key
 
 Refresh the model list. Model file management through Ollama panels does not work through the gateway. Picture making needs an image engine on the gateway.
 
@@ -52,7 +52,7 @@ For editor extensions such as Cline:
 
 - API provider: OpenAI Compatible
 - Base URL: your gateway address followed by `/openai/v1`
-- API key: your app key
+- API key: your key
 - Model ID: a chat model from the gateway's model list
 
 Tool calls use the OpenAI tool format. The model must support tool calls.
@@ -66,14 +66,14 @@ Use an OpenAI provider with the `/openai/v1` base URL. Choose a chat model for c
 Choose **Stable Diffusion Web UI (AUTOMATIC1111)** as the image source.
 
 - SD WebUI URL: the gateway address, without `/v1` or `/sdapi/v1`
-- Authentication: `gateway:` followed by your app key
+- Authentication: `gateway:` followed by your key
 
 Connect and choose an image model. Turn off Hires fix, Restore faces and scripts. Read the [A1111 limits](a1111.md#limits) before you turn on other settings.
 
 ## When setup fails
 
 - Check the base URL. Do not add a second `/v1` or `/api`.
-- Check that the key is an app key.
+- Check that you used the key created for this app.
 - Refresh the model list, and choose a name that your gateway returns.
 - If a protocol or model is missing, ask the owner to check the app's access plan.
 - Keep keys and signed URLs out of anything you share.

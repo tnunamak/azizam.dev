@@ -1,11 +1,11 @@
 ---
 title: MCP for agents
-summary: Connect an agent to the gateway's media tools over Streamable HTTP with an app key.
+summary: Connect an agent to the gateway's media tools over Streamable HTTP with a key.
 ---
 
 # MCP for agents
 
-The gateway runs an MCP server at `/mcp`. Connect with Streamable HTTP, and send your app key in an `Authorization: Bearer` header.
+The gateway runs an MCP server at `/mcp`. Connect with Streamable HTTP, and send your key in an `Authorization: Bearer` header.
 
 A request without a key gets HTTP 401 with a protected-resource metadata challenge. The gateway has no OAuth server, so use a client that can send the key as a header.
 

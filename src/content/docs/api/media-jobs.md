@@ -40,7 +40,7 @@ Check again every few seconds.
 
 Treat any other state as not finished.
 
-To cancel, send `POST /gateway/v1/media/jobs/{job_id}/cancel`. HTTP 202 means that the cancel was requested. Keep checking the job: it is not finished until it reaches a finished state.
+To cancel, send `POST /gateway/v1/media/jobs/<job_id>/cancel`. HTTP 202 means that the cancel was requested. Keep checking the job: it is not finished until it reaches a finished state.
 
 ## Read progress events
 

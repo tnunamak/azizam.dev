@@ -7,9 +7,17 @@ const kinds = [...new Set(guides.apps.map((app) => app.kind))];
 <DocsSection
   title="Connect an app · Azizam docs"
   heading="Connect an app"
-  description="Set up an app with an Azizam protocol address and an app key."
+  description="Set up an app with an Azizam protocol address and a key."
   activeSection="connect"
+  clientGuides={guides.apps.map(({ id, name }) => ({ id, name }))}
+  breadcrumbs={[{ label: 'Docs', href: '/docs/' }, { label: 'Connect' }]}
 >
+  <ol class="connect-steps">
+    <li>Create an app and a key in Apps &amp; keys on your gateway.</li>
+    <li>Copy the address.</li>
+    <li>Open your app's guide.</li>
+  </ol>
+
   <p>Use the protocol your app supports. Replace <code>&lt;your gateway&gt;</code> with the HTTPS address the owner gave you.</p>
 
   <h2>Base paths</h2>
@@ -21,7 +29,12 @@ const kinds = [...new Set(guides.apps.map((app) => app.kind))];
   </dl>
 
   <h2>Apps, keys and trusted addresses</h2>
-  <p>An App is something that connects to the gateway. A Key is the secret an app uses. The owner can add trusted addresses to an App; requests from those addresses use that App’s access plan without a key. A sent key always takes precedence.</p>
+  <dl class="connect-definitions">
+    <div><dt>App</dt><dd>Something that connects to the gateway.</dd></div>
+    <div><dt>Key</dt><dd>The secret an app uses.</dd></div>
+    <div><dt>Keyless access</dt><dd>Requests from a trusted address use an App's plan without a key.</dd></div>
+  </dl>
+  <p>The person the App answers for can manage its trusted addresses under Apps &amp; keys → app menu → Trusted addresses. A sent key takes precedence.</p>
   <p>Guide steps come from each app’s documentation or source. “Unverified” marks a flow that uses third-party guidance. These guides were checked {guides.checked}.</p>
 
   <h2>Client guides</h2>

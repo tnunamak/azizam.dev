@@ -7,14 +7,18 @@ interface Props {
   heading: string;
   description: string;
   activeSection: 'connect' | 'mcp' | 'api';
+  clientGuides?: { id: string; name: string }[];
+  currentClientId?: string;
+  breadcrumbs?: { label: string; href?: string }[];
 }
 
-const { title, heading, description, activeSection } = Astro.props;
+const { title, heading, description, activeSection, clientGuides = [], currentClientId, breadcrumbs = [] } = Astro.props;
 const sections = [
   { id: 'connect', label: 'Connect', href: '/docs/connect/' },
   { id: 'mcp', label: 'MCP tools', href: '/docs/mcp/' },
   { id: 'api', label: 'API reference', href: '/docs/api/' },
 ];
+const currentClientName = clientGuides.find((guide) => guide.id === currentClientId)?.name;
 ---
 <Base title={title} description={description} bodyClass="docs">
   <div class="docs-route wrap">
@@ -22,19 +26,50 @@ const sections = [
       <p class="docs-route-nav-label">Sections</p>
       <ul>
         {sections.map((section) => (
-          <li><a href={section.href} aria-current={activeSection === section.id ? 'true' : undefined}>{section.label}</a></li>
+          <li>
+            <a href={section.href} aria-current={activeSection === section.id && !(section.id === 'connect' && currentClientId) ? 'true' : undefined}>{section.label}</a>
+            {section.id === 'connect' && clientGuides.length > 0 && (
+              <ul class="docs-route-client-links" aria-label="Client guides">
+                {clientGuides.map((guide) => (
+                  <li><a href={'/docs/connect/' + guide.id + '/'} aria-current={currentClientId === guide.id ? 'true' : undefined}>{guide.name}</a></li>
+                ))}
+              </ul>
+            )}
+          </li>
         ))}
       </ul>
     </nav>
     <nav class="docs-route-mobile-nav" aria-label="Documentation sections">
-      <ul>
+      <ul class="docs-route-section-links">
         {sections.map((section) => (
-          <li><a href={section.href} aria-current={activeSection === section.id ? 'true' : undefined}>{section.label}</a></li>
+          <li><a href={section.href} aria-current={activeSection === section.id && !(section.id === 'connect' && currentClientId) ? 'true' : undefined}>{section.label}</a></li>
         ))}
       </ul>
+      {clientGuides.length > 0 && (
+        <details class="docs-route-client-menu">
+          <summary>Client guides{currentClientName && <span>{currentClientName}</span>}</summary>
+          <ul>
+            {clientGuides.map((guide) => (
+              <li><a href={'/docs/connect/' + guide.id + '/'} aria-current={currentClientId === guide.id ? 'true' : undefined}>{guide.name}</a></li>
+            ))}
+          </ul>
+        </details>
+      )}
     </nav>
     <main id="content" class="docs-route-main" tabindex="-1">
       <article class="prose docs-route-prose" data-pagefind-body>
+        {breadcrumbs.length > 0 && (
+          <nav class="docs-route-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+              {breadcrumbs.map((crumb, index) => (
+                <li>
+                  {index > 0 && <span aria-hidden="true">›</span>}
+                  {crumb.href ? <a href={crumb.href}>{crumb.label}</a> : <span aria-current="page">{crumb.label}</span>}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
         <h1>{heading}</h1>
         <slot />
       </article>

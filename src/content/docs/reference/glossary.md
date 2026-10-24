@@ -19,9 +19,9 @@ A key for changing the gateway's configuration. It cannot run model requests. Ke
 
 A client that uses the gateway, such as a chat app, a script or an agent. A personal app belongs to a person. A service app belongs to a service account. See [Apps and keys](../concepts/apps-and-keys.md).
 
-## App key
+## Key
 
-A key that lets an app send requests. It is shown once, when it is created.
+A secret that lets an app send requests. It is shown once, when it is created.
 
 ## Category
 
