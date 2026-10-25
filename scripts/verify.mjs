@@ -155,6 +155,14 @@ try {
         const levels = await page.locator('h1, h2, h3, h4').evaluateAll((hs) => hs.map((h) => Number(h.tagName[1])));
         levels.forEach((level, i) => { if (i) assert.ok(level <= levels[i - 1] + 1, `${label}: heading order ${levels.join(',')}`); });
         if (width === 390) {
+          if (sample.name === 'home') {
+            for (const narrowWidth of [375, 360]) {
+              await page.setViewportSize({ width: narrowWidth, height: 844 });
+              assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `home ${narrowWidth} ${theme}: sideways scroll`);
+              assert.equal(await page.locator('.hero-actions').evaluate((el) => el.scrollWidth > el.clientWidth), false, `home ${narrowWidth} ${theme}: CTA overflow`);
+            }
+            await page.setViewportSize({ width, height: 844 });
+          }
           const small = await page.locator(TAP).evaluateAll((els) => els
             .filter((el) => el.checkVisibility({ contentVisibilityAuto: true, visibilityProperty: true }))
             .map((el) => ({ el: el.outerHTML.slice(0, 60), w: Math.round(el.getBoundingClientRect().width), h: Math.round(el.getBoundingClientRect().height) }))

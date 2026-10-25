@@ -78,7 +78,7 @@
   .hero { gap: 20px; padding-top: 22px; padding-bottom: 18px; }
   .hero h1 { max-width: 13ch; }
   .hero-description { margin-top: 14px; line-height: 1.45; }
-  .hero-actions { flex-wrap: nowrap; gap: 12px; margin-top: 18px; }
+  .hero-actions { gap: 8px; margin-top: 18px; }
   .hero-actions .btn { white-space: nowrap; }
   .preview-note { margin-top: 10px; }
   .product-proof { width: min(100%, 340px); margin-inline: auto; }
@@ -88,7 +88,4 @@
   .claims, .setup, .limits { margin-top: 52px; }
   .home h2 { margin-bottom: 16px; }
   .claim-row { grid-template-columns: minmax(0, 1fr); gap: 4px; padding-block: 17px; }
-}
-@media (max-width: 359px) {
-  .hero-actions { flex-wrap: wrap; }
 }
