@@ -7,7 +7,7 @@ summary: Start the gateway with Docker Compose and connect it to an engine on th
 
 This page installs the gateway with Docker Compose on one computer. At the end, the gateway runs on that computer and its setup page opens in a browser.
 
-Azizam is in private preview. These steps assume you already have access to the Azizam repository. To ask for access, see [Early access](/#early-access) on the home page.
+Azizam is in private preview. These steps assume you already have an invitation to the private gateway repository.
 
 ## Before you start
 

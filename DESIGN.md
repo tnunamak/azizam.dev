@@ -1,60 +1,79 @@
 ---
 name: Azizam
-description: A self-hosted AI gateway, shared on the owner's terms.
+description: A self-hosted gateway for the AI people already use.
 colors:
-  bg: "#f3f6f6"
-  panel: "#ffffff"
-  panel2: "#e9eeef"
-  line: "#d7e0e2"
-  text: "#10232a"
-  muted: "#3d4f55"
-  accent: "#0a6676"
+  background: "#f3f6f6"
+  ink: "#10232a"
   primary: "#0d4552"
-  brand-copper: "#c4532b"
-  dark-bg: "#0c1f25"
-  dark-panel: "#112930"
-  dark-text: "#e3ecee"
-  dark-muted: "#b4c6cb"
-  dark-accent: "#8cc8cb"
+  accent: "#0a6676"
+  line: "#d7e0e2"
+  on-primary: "#ffffff"
+  code-background: "#0d1117"
+  code-ink: "#e6edf3"
+  code-line: "#30363d"
+  code-muted: "#9ea7b3"
+  code-hover: "#21262d"
+  overlay: "rgb(5 15 18 / .6)"
+  mark: "#c4532b"
+  dark-background: "#0c1f25"
+  dark-ink: "#e3ecee"
   dark-primary: "#1f6f79"
-  dark-brand-copper: "#f08a5d"
-  code-bg: "#0d1117"
+  dark-accent: "#8cc8cb"
+  dark-mark: "#f08a5d"
 typography:
-  fontFamily: "system-ui, -apple-system, Segoe UI, sans-serif"
-  h1: "60px / 38px phone, weight 750, line 1.05, -0.02em"
-  h2: "36px / 28px phone"
-  h3: "20px"
-  body: "17px / 16px phone, line 1.55"
+  display:
+    fontFamily: "Newsreader Variable, serif"
+    fontSize: "clamp(44px, 5.4vw, 72px)"
+    fontWeight: 430
+    lineHeight: 1.02
+    letterSpacing: "-0.025em"
+  heading:
+    fontFamily: "DM Sans Variable, sans-serif"
+    fontSize: "clamp(24px, 2vw, 28px)"
+    fontWeight: 550
+  body:
+    fontFamily: "DM Sans Variable, sans-serif"
+    fontSize: "18px"
+    lineHeight: 1.6
+  caption:
+    fontFamily: "DM Sans Variable, sans-serif"
+    fontSize: "14px"
+  utility:
+    steps: [12, 13, 14, 15, 16, 17, 18, 19, 20]
 rounded:
-  card: "16px"
-  control: "6px to 8px"
+  micro: "2px"
+  inline: "4px"
+  control: "4px"
+  panel: "8px"
+  dialog: "12px"
+  frame: "6px"
+  button: "5px"
+spacing:
+  container-desktop: "calc(100% - 96px)"
+  container-mobile: "calc(100% - 40px)"
+  measure: "65ch"
 ---
 
 # Design System: Azizam
 
-The tokens above live as CSS custom properties in `src/styles/global.css`. They match the gateway app and its product-site spec (`site-hill/DESIGN.md`). The site loads no web fonts and no third-party hosts.
+## Direction
 
-## Principles
+The landing page follows an independent software editorial: one direct outcome, one real product screen, then the request path. Prose stays open on the page. Thin rules separate the four product claims. The screenshot has one restrained frame.
 
-- One outcome claim, one real artifact (a recorded request and reply), then mechanism. Home stays short; the gallery lives on Examples and the detail lives in Docs.
-- Copper is the brand mark colour. On the site it marks the curl, the words "Your own" in the h1, the early-access rule and the focus ring. It is never body text, a button or a link.
-- Primary actions use deep teal. Links use the accent. Light and dark follow the system setting (`prefers-color-scheme`); there is no toggle.
-- Cards have a 16px radius and a 1px border. No shadows. Sections are 96px apart on desktop, 64px on phone.
-- Every number and every output on the site comes from a recording or from the docs. No testimonials, counts, logos or invented results.
-- Motion is not used. Any added motion must respect `prefers-reduced-motion`.
+## Typography
 
-## Brand
+Newsreader Variable carries the display promise. DM Sans Variable handles navigation, body text, captions, and controls. Both are self-hosted under SIL Open Font License 1.1. The page uses one responsive display scale, one responsive heading scale, and 18px body text. Paragraphs stay near 65 characters per line. Smaller utility sizes serve navigation, labels, captions, and code.
 
-The mark is the copper curl, drawn by `docs/design/brand/curl.py` in the gateway repository. `src/components/Mark.astro` holds the master path, `public/favicon.svg` the firmer 16 and 32 px drawing, and `npm run assets` renders `public/og.png` and `public/apple-touch-icon.png`. The fish is retired.
+## Colour
 
-## Pages
+Light surfaces use the app palette: background `#f3f6f6`, ink `#10232a`, primary `#0d4552`, and accent `#0a6676`. Dark mode uses a deep blue-green background and pale ink. The copper curl remains the only orange element; orange does not decorate text, links, or controls.
 
-- **Home** (`/`): hero with the recorded exchange, four value cards, a three-stage flow, quick start with an early-access block, and the honest-limits list.
-- **Examples** (`/examples/`): recorded text requests, grouped by capability, with a chip row that jumps between groups.
-- **Docs** (`/docs/`): sidebar, on-page contents, search (Pagefind), previous and next links.
+## Layout and interaction
 
-All three share one header (brand, Examples, Docs, API, Get started) and one footer. At 390px the header shows the brand and a 44px Menu disclosure.
+The header lists Examples, Docs, and API, with the setup guide as its primary action. The footer links to the product, Docs, API, and Security. Home claims use plain rows with thin separators; the process is one line with arrows. The setup section has one short paragraph and a link, with no homepage commands.
 
-## Accessibility
+The site respects system light and dark preferences, keyboard focus, reduced motion, and a 390px viewport. There is no authored motion on the landing page. Contrast must meet WCAG AA in both themes.
 
-AA contrast in both themes, one h1 per page, ordered headings, a skip link, visible focus, 44px tap targets on phones, and pages that read without JavaScript. `npm run verify` checks these with axe and layout assertions.
+## Evidence
+
+The landing page uses the seeded Apps & Keys screen in light and dark themes, captioned “Screens from a seeded demo gateway.” Its abbreviated key values and private address are removed from the distributed image. No testimonials, counts, live statuses, example costs, timings, or generated replies are used as proof.

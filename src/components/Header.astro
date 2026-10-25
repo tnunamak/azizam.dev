@@ -8,7 +8,7 @@ interface Props { current: string; }
 const { current } = Astro.props;
 const links = [
   ...NAV.map((link) => ({ ...link, primary: false })),
-  { key: 'start', label: 'Get started', href: GET_STARTED, primary: true },
+  { key: 'start', label: 'Read the setup guide', href: GET_STARTED, primary: true },
 ];
 function mark(href: string): 'page' | 'true' | undefined {
   if (current === href) return 'page';

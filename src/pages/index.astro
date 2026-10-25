@@ -3,143 +3,82 @@ import Base from '../layouts/Base.astro';
 import { GET_STARTED } from '../config';
 import '../styles/home.css';
 
-// The proof is copied from the recorded example "chat-default" (recorded 2 Oct 2026).
-const proof = {
-  prompt: 'Explain in two sentences why the sky is blue.',
-  reply: "Sunlight entering Earth's atmosphere scatters off air molecules, and shorter blue wavelengths scatter much more strongly than longer red ones (a process called Rayleigh scattering). This scattered blue light is then distributed across the sky in all directions, so no matter where you look, you see blue.",
-};
+const productDescription =
+  'Azizam is a self-hosted gateway. Point the apps you already use at it. Each person and app gets its own key and plan, requests run on your own engines first, and every request leaves a receipt.';
 ---
-<Base title="Azizam: your own AI gateway" description="Your own AI gateway, shared on your terms. Put the AI engines you run, and any paid providers you choose, behind one OpenAI-compatible address." bodyClass="home">
-  <main id="content" tabindex="-1">
+<Base title="One address for the AI you run · Azizam" description={productDescription} bodyClass="home">
+  <main id="content" tabindex="-1" class="home">
     <section class="hero wrap" aria-labelledby="home-title">
-      <div class="hero-text">
-        <p class="eyebrow">Self-hosted AI gateway</p>
-        <h1 id="home-title"><span class="accent-words">Your own</span> AI gateway, shared on your terms.</h1>
-        <p class="lede">Put the AI engines you run, and any paid providers you choose, behind one OpenAI-compatible address. Give each person and app its own key, access plan and spend cap.</p>
+      <div class="hero-copy">
+        <h1 id="home-title">One address for the AI you run.</h1>
+        <p class="hero-description">{productDescription}</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" data-cta href={GET_STARTED}>Get started</a>
-          <a class="btn btn-secondary" data-cta href="/examples/">See it work →</a>
+          <a class="btn btn-primary" data-cta href={GET_STARTED}>Read the setup guide</a>
+          <a class="btn btn-secondary" data-cta href="#how">See how it works</a>
         </div>
-        <p class="microline">Runs on a computer you control · Works with OpenAI, Anthropic and Ollama clients · Private preview</p>
+        <p class="preview-note">Private preview. Access is by invitation.</p>
       </div>
-      <figure class="proof-card card" aria-labelledby="proof-caption">
-        <figcaption id="proof-caption" class="eyebrow">A real request, recorded through Azizam</figcaption>
-        <p class="proof-request"><code class="proof-path"><span>POST</span> /openai/v1/chat/completions</code><code class="proof-model">default</code></p>
-        <dl class="proof-exchange">
-          <dt>You</dt>
-          <dd>{proof.prompt}</dd>
-          <dt>Reply</dt>
-          <dd>{proof.reply}</dd>
-        </dl>
-        <p class="proof-meta">Ran in 4.3 s · 115 tokens · recorded 2 Oct 2026 · <a href="/examples/">More examples</a></p>
+
+      <figure class="product-proof" aria-labelledby="proof-caption">
+        <picture>
+          <source srcset="/images/apps-keys-1440-dark.webp" media="(prefers-color-scheme: dark)" />
+          <img
+            src="/images/apps-keys-1440-light.webp"
+            width="1440"
+            height="1260"
+            alt="Azizam's Apps and keys screen, showing separate apps and access plans."
+            fetchpriority="high"
+          />
+        </picture>
+        <figcaption id="proof-caption">Screens from a seeded demo gateway.</figcaption>
       </figure>
     </section>
 
-    <section class="block wrap" aria-labelledby="values-title">
-      <h2 id="values-title" class="visually-hidden">What the gateway gives you</h2>
-      <div class="value-grid">
-        <article class="value-card card">
-          <h3>A key and a plan for everyone</h3>
-          <p>Invite people with a link. Each person and app gets its own key, and a plan that sets which models it may use and how much it may spend.</p>
-          <div class="mini mini-plan" role="group" aria-label="Example plan: Family, Chat and Image, $5 a month"><span class="pill plan-name">Family</span><span class="pill">Chat</span><span class="pill">Image</span><span class="price">$5 a month</span></div>
+    <section id="how" class="how wrap" aria-label="How it works">
+      <p class="how-line">
+        <span>Your apps</span>
+        <span class="arrow" aria-hidden="true">→</span>
+        <span>Azizam (key, plan, receipt)</span>
+        <span class="arrow" aria-hidden="true">→</span>
+        <span>your engines, or a provider you allow</span>
+      </p>
+    </section>
+
+    <section id="features" class="claims wrap" aria-labelledby="claims-title">
+      <h2 id="claims-title">What it gives you</h2>
+      <div class="claim-list">
+        <article class="claim-row">
+          <h3>One address</h3>
+          <p>Use one OpenAI-compatible address for apps that speak OpenAI, Anthropic, or Ollama. Agents can connect through MCP.</p>
         </article>
-        <article class="value-card card">
+        <article class="claim-row">
+          <h3>A key and plan for each person and app</h3>
+          <p>Each person and app has its own key and access plan. The plan sets which models it may use and its spend cap.</p>
+        </article>
+        <article class="claim-row">
           <h3>Your engines first</h3>
-          <p>Requests go to the engines on your own hardware. A paid model is used only when the plan allows it, under a spend cap you set.</p>
-          <div class="mini mini-path" role="group" aria-label="Your engine, then a paid provider only if allowed"><span>Your engine</span><span class="arrow" aria-hidden="true">→</span><span>Paid provider <small>(only if allowed)</small></span></div>
+          <p>Requests run on your own engines first. A paid provider is used only when the access plan allows it.</p>
         </article>
-        <article class="value-card card">
+        <article class="claim-row">
           <h3>A receipt for every request</h3>
-          <p>See who asked, which model ran, where it ran and what it cost.</p>
-          <div class="mini mini-receipt" role="group" aria-label="Receipt fields: Person, Model, Where it ran, Cost"><span>Person</span><span>Model</span><span>Where it ran</span><span>Cost</span></div>
-        </article>
-        <article class="value-card card">
-          <h3>Works with the apps you already use</h3>
-          <p>OpenAI, Anthropic and Ollama API shapes, and an MCP server for agents, on one address.</p>
-          <p class="mini mini-routes" role="group" aria-label="Supported routes: OpenAI, Anthropic, Ollama and MCP"><code>/openai/v1</code> <code>/anthropic</code> <code>/ollama</code> <code>/mcp</code></p>
+          <p>Each receipt shows who asked, which model ran, where it ran, and its recorded cost.</p>
         </article>
       </div>
     </section>
 
-    <section class="block wrap" aria-labelledby="how-title">
-      <h2 id="how-title">How it works</h2>
-      <figure class="flow" aria-labelledby="flow-caption">
-        <figcaption id="flow-caption">Azizam checks the key and plan, sends the request to an engine or provider the plan allows, and records a receipt.</figcaption>
-        <div class="flow-step">
-          <p class="flow-title">Your apps and people</p>
-          <p class="flow-detail">Chat apps, SDKs, coding agents, MCP clients, a phone</p>
-        </div>
-        <div class="flow-link"><span>one address, one key each</span></div>
-        <div class="flow-step flow-gateway">
-          <p class="flow-title">Azizam</p>
-          <p class="flow-detail">Checks the key and access plan, routes the request, records a receipt</p>
-        </div>
-        <div class="flow-link"><span>only what the plan allows</span></div>
-        <div class="flow-ends">
-          <div class="flow-step">
-            <p class="flow-title">Engines you run</p>
-            <p class="flow-detail">Chat, image, video, speech and music servers on your hardware</p>
-          </div>
-          <div class="flow-step">
-            <p class="flow-title">Providers you choose</p>
-            <p class="flow-detail">Paid models, with spend caps</p>
-          </div>
-        </div>
-      </figure>
+    <section id="setup" class="setup wrap" aria-labelledby="setup-title">
+      <h2 id="setup-title">Set it up</h2>
+      <p>Follow the guide to set up the gateway, connect an engine you already run, and point an app at Azizam. <a href={GET_STARTED}>Read the setup guide</a>.</p>
     </section>
 
-    <section class="block wrap" aria-labelledby="start-title">
-      <h2 id="start-title">Start in a few minutes</h2>
-      <div class="early card" id="early-access">
-        <p class="eyebrow">Early access</p>
-        <p class="lead">Azizam is in private preview.</p>
-        <p>Access is by invitation for now.</p>
-      </div>
-      <p class="after-access">Once you have access:</p>
-      <div class="command-block card">
-        <div class="command-tabs" role="tablist" aria-label="Installation method">
-          <button id="compose-tab" role="tab" aria-selected="true" aria-controls="compose-panel" type="button">Docker Compose</button>
-        </div>
-        <div id="compose-panel" class="command-panel" role="tabpanel" aria-labelledby="compose-tab">
-          <pre tabindex="0"><code id="compose-command">docker compose up -d</code></pre>
-          <button class="copy-btn" id="copy-command" type="button" hidden>Copy</button>
-        </div>
-        <p id="copy-status" class="visually-hidden" role="status" aria-live="polite"></p>
-      </div>
-      <ol class="quick-steps">
-        <li>Open http://127.0.0.1:5000/setup and create the owner account.</li>
-        <li>Add your engine's address and give its model a name.</li>
-        <li>Create a key, point your app at <code>/openai/v1</code>, and send a message.</li>
-      </ol>
-      <p><a href={GET_STARTED}>Read the setup guide</a></p>
-    </section>
-
-    <section class="block wrap" aria-labelledby="limits-title">
+    <section id="limits" class="limits wrap" aria-labelledby="limits-title">
       <h2 id="limits-title">Before you rely on it</h2>
       <ul class="facts">
-        <li>You choose the engines and model files. Azizam connects to them; it does not download models.</li>
-        <li>Compatibility is per route. Each <a href="/docs/api/">API page</a> lists the features that work and their limits.</li>
-        <li>Paid spend is estimated, reserved, then settled; final cost may remain unknown. Running requests can pass a cap; set a provider credit limit too.</li>
-        <li>You run the computer, including updates, backups and HTTPS for access from other devices.</li>
+        <li>You supply and maintain your engines and model files. Azizam connects to them; it does not install them.</li>
+        <li>Compatibility depends on the route. The <a href="/docs/api/">API guides</a> list supported methods and their limits.</li>
+        <li>Spend caps use recorded spend. Requests already running can exceed a cap before their final cost is known. Set a provider credit limit too.</li>
+        <li>You run the host, including updates, backups, and HTTPS for access from other devices.</li>
       </ul>
     </section>
   </main>
-  <script>
-    const button = document.getElementById('copy-command');
-    const status = document.getElementById('copy-status');
-    const command = document.getElementById('compose-command');
-    if (button && status && command) {
-      button.hidden = false;
-      button.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(command.textContent ?? '');
-          status.textContent = 'Command copied';
-          button.textContent = 'Copied';
-        } catch {
-          status.textContent = 'Copy failed. Select the command and copy it.';
-          button.textContent = 'Select and copy';
-        }
-      });
-    }
-  </script>
 </Base>

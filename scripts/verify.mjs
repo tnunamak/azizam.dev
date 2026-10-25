@@ -41,14 +41,22 @@ if (!url) {
   url = `http://127.0.0.1:${server.address().port}`;
 }
 
-const HOME_H1 = 'Your own AI gateway, shared on your terms.';
-const SKY_REPLY = "Sunlight entering Earth's atmosphere scatters off air molecules, and shorter blue wavelengths scatter much more strongly than longer red ones (a process called Rayleigh scattering). This scattered blue light is then distributed across the sky in all directions, so no matter where you look, you see blue.";
+const HOME_H1 = 'One address for the AI you run.';
 const ENGINE_NAMES = /litellm|comfyui|llama\.cpp|llama-server|vllm|lm studio|invokeai|stable diffusion webui/i;
 // 192.168.1.0/24 is the generic example range in the access-plan docs, not a real host.
 const PRIVATE = /vivid\.fish|192\.168\.(?!1\.0\/24)|tnunamak|\.local\b|opk_[a-z0-9]{8,}/i;
 const INVENTED = /testimonial|\b\d[\d,.]*k?\+?\s+(users|stars|downloads|customers)\b/i;
 const warnings = [];
 const summary = [];
+
+const exampleGroups = JSON.parse(await readFile(new URL('../src/data/examples.json', import.meta.url), 'utf8'));
+const exampleRecords = exampleGroups.flatMap((group) => group.examples);
+assert.equal(exampleRecords.length, 7, 'Seven request shapes remain for review');
+for (const example of exampleRecords) {
+  assert.ok(!('outputs' in example), `${example.id}: no unverified output`);
+  assert.ok(!('seconds' in example), `${example.id}: no unverified timing`);
+  assert.ok(!('created_at' in example), `${example.id}: no unverified recording date`);
+}
 
 // ---- Site-wide checks on the built files -------------------------------------------------
 const dist = distDir;
@@ -135,6 +143,14 @@ try {
         assert.deepEqual(errors, [], `${label}: console errors`);
         const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
         assert.deepEqual(axe.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })), [], `${label}: axe`);
+        if (sample.name === 'home' && width === 1440) {
+          for (const primary of await page.locator('.btn-primary:visible').all()) {
+            await primary.hover();
+            const hoveredAxe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+            assert.deepEqual(hoveredAxe.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })), [], `${label}: hovered primary action axe`);
+          }
+          await page.mouse.move(0, 0);
+        }
         // The headings go in order: no level is skipped.
         const levels = await page.locator('h1, h2, h3, h4').evaluateAll((hs) => hs.map((h) => Number(h.tagName[1])));
         levels.forEach((level, i) => { if (i) assert.ok(level <= levels[i - 1] + 1, `${label}: heading order ${levels.join(',')}`); });
@@ -149,28 +165,30 @@ try {
         const record = { sample: sample.name, width, theme, height: height1, kb: Math.round(bytes / 1024) };
         if (sample.name === 'home') {
           assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' '), HOME_H1);
-          assert.equal(await page.locator('h1 .accent-words').innerText(), 'Your own');
           const words = (await page.locator('main').innerText()).split(/\s+/).filter(Boolean).length;
-          assert.ok(words >= 350 && words <= 1100, `${label}: ${words} words`);
+          assert.ok(words >= 150 && words <= 500, `${label}: ${words} words`);
           assert.ok(height1 <= (width === 1440 ? 6000 : 9000), `${label}: page height ${height1}`);
           assert.ok(bytes <= 400 * 1024, `${label}: ${bytes} bytes`);
           const inFirstScreen = await page.locator('h1, [data-cta]').evaluateAll((els) => els.map((el) => el.getBoundingClientRect().bottom <= innerHeight));
           assert.equal(inFirstScreen.length, 3);
           assert.ok(inFirstScreen.every(Boolean), `${label}: h1 and both CTAs in the first screen`);
-          if (width === 1440) assert.ok(await page.locator('.proof-card').evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight), `${label}: proof card in the first screen`);
+          if (width === 1440) {
+            assert.ok(await page.locator('.product-proof').evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight), `${label}: product proof in the first screen`);
+            assert.ok(await page.locator('.how-line').evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight), `${label}: mechanism in the first screen`);
+          }
           assert.equal(await page.locator('[data-cta]').count(), 2);
-          assert.match(await page.locator('.proof-exchange').innerText(), new RegExp(SKY_REPLY.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-          assert.match(await page.locator('.proof-meta').innerText(), /Ran in 4\.3 s · 115 tokens · recorded 2 Oct 2026/);
-          assert.match(await page.locator('#early-access').innerText(), /Azizam is in private preview\./);
-          assert.match(await page.locator('#early-access').innerText(), /Access is by invitation for now\./);
-          assert.equal(await page.locator('#early-access a[href^="mailto:"]').count(), 0, `${label}: no contact address until the owner chooses one`);
-          assert.equal(await page.locator('.quick-steps li').count(), 3);
-          assert.equal(await page.locator('.value-card').count(), 4);
+          assert.deepEqual(await page.locator('[data-cta]').allInnerTexts(), ['Read the setup guide', 'See how it works']);
+          assert.deepEqual(await page.locator('[data-cta]').evaluateAll((els) => els.map((el) => el.getAttribute('href'))), ['/docs/start/install/', '#how']);
+          assert.equal(await page.locator('.preview-note').innerText(), 'Private preview. Access is by invitation.');
+          assert.equal(await page.locator('.product-proof figcaption').innerText(), 'Screens from a seeded demo gateway.');
+          assert.equal(await page.locator('.claim-row').count(), 4);
+          assert.match((await page.locator('.how-line').innerText()).replace(/\s+/g, ' '), /Your apps.*Azizam \(key, plan, receipt\).*your engines, or a provider you allow/);
+          assert.equal(await page.locator('.proof-card, .early, .command-block, .quick-steps').count(), 0);
+          assert.equal(await page.locator('.preview-note').count(), 1);
+          const image = page.locator('.product-proof img');
+          assert.equal(await image.evaluate((img) => img.naturalWidth), 1440, `${label}: product screenshot loaded`);
+          assert.equal(new URL(await image.evaluate((img) => img.currentSrc)).pathname, `/images/apps-keys-1440-${theme}.webp`, `${label}: matching theme screenshot`);
           assert.equal(await page.locator('.brand .mark').count(), 1);
-          // Copy button.
-          await page.locator('#copy-command').click();
-          await page.waitForFunction(() => document.getElementById('copy-command').textContent === 'Copied');
-          assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'docker compose up -d');
           // Header: current page and menu.
           assert.equal(await page.locator('.brand').first().getAttribute('aria-current'), 'page');
           if (width === 390) {
@@ -179,13 +197,16 @@ try {
             assert.equal(await page.locator('.site-disclosure nav a').count(), 4);
             assert.equal(await page.locator('.site-disclosure nav a:visible').count(), 4);
           } else {
-            assert.deepEqual(await page.locator('.site-nav a').allInnerTexts(), ['Examples', 'Docs', 'API', 'Get started']);
+            assert.deepEqual(await page.locator('.site-nav a').allInnerTexts(), ['Examples', 'Docs', 'API', 'Read the setup guide']);
           }
         }
         if (sample.name === 'examples') {
-          assert.equal((await page.locator('h1').innerText()), 'See it work');
+          assert.equal((await page.locator('h1').innerText()), 'Examples');
           assert.equal(await page.locator('.example').count(), 7);
-          assert.match(await page.locator('#chat-default').innerText(), /Rayleigh scattering/);
+          assert.equal(await page.locator('.example pre').count(), 7);
+          assert.equal(await page.locator('.example-output, .example-meta').count(), 0);
+          const exampleText = await page.locator('main').innerText();
+          assert.doesNotMatch(exampleText, /Sunlight entering|cos\(1,2\)|I arrived (?:via|on|over)|Recorded \d|\b\d+(?:\.\d+)? s\b/i);
           assert.equal(await page.locator('.site-nav a[aria-current]').first().getAttribute('aria-current'), 'page');
         }
         if (sample.name.startsWith('docs')) {
@@ -232,8 +253,8 @@ try {
   const plain = await browser.newContext({ javaScriptEnabled: false });
   const page = await plain.newPage();
   await page.goto(url + '/', { waitUntil: 'networkidle' });
-  assert.equal(await page.locator('#compose-command').isVisible(), true);
-  assert.equal(await page.locator('#copy-command').isVisible(), false);
+  assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' '), HOME_H1);
+  assert.equal(await page.locator('.product-proof img').isVisible(), true);
   await page.goto(url + '/docs/start/install/', { waitUntil: 'networkidle' });
   assert.equal(await page.locator('pre').first().isVisible(), true);
   await plain.close();
