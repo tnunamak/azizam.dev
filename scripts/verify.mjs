@@ -45,6 +45,7 @@ const HOME_H1 = 'One address for the AI you run.';
 const ENGINE_NAMES = /litellm|comfyui|llama\.cpp|llama-server|vllm|lm studio|invokeai|stable diffusion webui/i;
 // 192.168.1.0/24 is the generic example range in the access-plan docs, not a real host.
 const PRIVATE = /vivid\.fish|192\.168\.(?!1\.0\/24)|tnunamak|\.local\b|opk_[a-z0-9]{8,}/i;
+const TEMPLATE_TOKEN = /(?<!\$)\{[A-Za-z_][A-Za-z0-9_-]*\}/;
 const INVENTED = /testimonial|\b\d[\d,.]*k?\+?\s+(users|stars|downloads|customers)\b/i;
 const warnings = [];
 const summary = [];
@@ -79,6 +80,8 @@ for (const file of files) {
 assert.ok(pages.size >= 37, `Expected at least 37 pages, built ${pages.size}`);
 assert.ok(pages.has('/') && pages.has('/examples/') && pages.has('/docs/'), 'Home, Examples and Docs exist');
 for (const [path, { html }] of pages) {
+  const templateToken = html.match(TEMPLATE_TOKEN)?.[0];
+  assert.equal(templateToken, undefined, `${path}: unresolved template token ${templateToken}`);
   assert.equal([...html.matchAll(/<h1[\s>]/g)].length, 1, `${path}: exactly one h1`);
   assert.match(html, /<meta name="robots" content="noindex, nofollow"/, `${path}: noindex`);
   assert.ok(!/fish/i.test(html.replace(/<path d="[^"]*"/g, '')), `${path}: no fish`);
@@ -88,7 +91,9 @@ for (const [path, { html }] of pages) {
   const engines = text.match(ENGINE_NAMES)?.[0];
   if (engines) assert.ok(path === '/docs/start/install/' && /litellm/i.test(engines), `${path}: engine name "${engines}"`);
   assert.ok(!/git clone/i.test(text), `${path}: no git clone`);
-  assert.ok(!/github\.com/i.test(text), `${path}: no github.com link`);
+  if (/github\.com/i.test(text)) {
+    assert.ok(path.startsWith('/docs/connect/'), `${path}: GitHub links are limited to client setup docs`);
+  }
   for (const img of html.matchAll(/<img\b[^>]*>/g)) assert.match(img[0], /\salt=/, `${path}: img without alt`);
 }
 // Every internal link and anchor resolves.
@@ -107,7 +112,7 @@ for (const [path, { html }] of pages) if (path.startsWith('/docs/')) {
   assert.ok(!/href="\/(showcase|openapi\.json|gateway\/)/.test(html), `${path}: link into a live gateway`);
 }
 const docsCount = [...pages.keys()].filter((p) => p.startsWith('/docs/')).length;
-assert.equal(docsCount, 35, 'All 35 docs pages are built');
+assert.equal(docsCount, 53, 'All 53 docs pages are built');
 assert.ok((await readdir(join(dist, 'pagefind'))).includes('pagefind.js'), 'Pagefind index exists');
 summary.push({ pages: pages.size, docs: docsCount, internalLinksChecked: links });
 
@@ -219,7 +224,7 @@ try {
           assert.equal(await page.locator('.site-nav a[aria-current]').first().getAttribute('aria-current'), 'page');
         }
         if (sample.name.startsWith('docs')) {
-          assert.equal(await page.locator('.docs-shell .docs-nav a').count(), 35, `${label}: sidebar lists every page`);
+          assert.equal(await page.locator('.docs-shell .docs-nav a').count(), 53, `${label}: sidebar lists every page`);
           if (width === 1440) assert.equal(await page.locator('.docs-nav a[aria-current="page"]').count(), 1);
           assert.equal(await page.locator('.site-header').count(), 1);
           assert.equal(await page.locator('footer.foot').count(), 1);

@@ -19,6 +19,29 @@
   ]
  },
  {
+  "title": "Connect",
+  "pages": [
+   "connect/index",
+   "connect/open-webui",
+   "connect/librechat",
+   "connect/sillytavern",
+   "connect/openwhispr",
+   "connect/cursor",
+   "connect/codex",
+   "connect/claude-code",
+   "connect/python",
+   "connect/javascript",
+   "connect/curl",
+   "connect/chatgpt",
+   "connect/claude-ai",
+   "connect/vscode",
+   "connect/windsurf",
+   "connect/goose",
+   "connect/zed",
+   "connect/mcp-inspector"
+  ]
+ },
+ {
   "title": "Run a gateway",
   "pages": [
    "operate/engines",
