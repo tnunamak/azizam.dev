@@ -156,6 +156,7 @@ try {
         levels.forEach((level, i) => { if (i) assert.ok(level <= levels[i - 1] + 1, `${label}: heading order ${levels.join(',')}`); });
         if (width === 390) {
           if (sample.name === 'home') {
+            assert.equal(await page.locator('.hero-actions').evaluate((el) => el.scrollWidth > el.clientWidth), false, `home ${width} ${theme}: CTA overflow`);
             for (const narrowWidth of [375, 360]) {
               await page.setViewportSize({ width: narrowWidth, height: 844 });
               assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `home ${narrowWidth} ${theme}: sideways scroll`);

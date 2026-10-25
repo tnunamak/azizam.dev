@@ -50,7 +50,7 @@ spacing:
 
 ## Direction
 
-The landing page follows an independent software editorial: one direct outcome, one real product screen, then the request path. Prose stays open on the page. Thin rules separate the four product claims. The screenshot has one restrained frame. The frame uses a 6px radius, controls and inline code use 4px, and documentation panels use 8px.
+The landing page follows an independent software editorial: one direct outcome, one real product screen, then the request path. Prose stays open on the page. Thin rules separate the four product claims. The screenshot has one restrained frame. The screenshot frame uses 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
 
 ## Typography
 
