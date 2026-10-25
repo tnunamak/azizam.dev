@@ -51,6 +51,17 @@ const INVENTED = /testimonial|\b\d[\d,.]*k?\+?\s+(users|stars|downloads|customer
 const warnings = [];
 const summary = [];
 
+function findTemplateToken(html) {
+  const decodedHtml = html
+    .replace(/&(?:#0*123|#x0*7b|lcub|lbrace);/gi, '{')
+    .replace(/&(?:#0*125|#x0*7d|rcub|rbrace);/gi, '}');
+  const rawToken = decodedHtml.match(TEMPLATE_TOKEN)?.[0];
+  if (rawToken) return rawToken;
+
+  const visibleText = decodedHtml.replace(/<[^>]*>/g, '');
+  return visibleText.match(TEMPLATE_TOKEN)?.[0];
+}
+
 // ---- Site-wide checks on the built files -------------------------------------------------
 const dist = distDir;
 async function walk(dir) {
@@ -72,7 +83,7 @@ for (const file of files) {
 assert.ok(pages.size >= 37, `Expected at least 37 pages, built ${pages.size}`);
 assert.ok(pages.has('/') && pages.has('/examples/') && pages.has('/docs/'), 'Home, Examples and Docs exist');
 for (const [path, { html }] of pages) {
-  const templateToken = html.match(TEMPLATE_TOKEN)?.[0];
+  const templateToken = findTemplateToken(html);
   assert.equal(templateToken, undefined, `${path}: unresolved template token ${templateToken}`);
   assert.equal([...html.matchAll(/<h1[\s>]/g)].length, 1, `${path}: exactly one h1`);
   assert.match(html, /<meta name="robots" content="noindex, nofollow"/, `${path}: noindex`);
@@ -103,6 +114,16 @@ for (const [path, { html }] of pages) {
 for (const [path, { html }] of pages) if (path.startsWith('/docs/')) {
   assert.ok(!/href="\/(showcase|openapi\.json|gateway\/)/.test(html), `${path}: link into a live gateway`);
 }
+const docsNav = JSON.parse(await readFile(new URL('../src/data/docs-nav.json', import.meta.url), 'utf8'));
+const connectGroup = docsNav.find((group) => group.title === 'Connect');
+assert.ok(connectGroup && Array.isArray(connectGroup.pages), 'Connect docs navigation group exists');
+const connectIds = connectGroup.pages.filter((id) => id.startsWith('connect/'));
+assert.equal(connectIds.length, 18, 'Connect navigation lists the index and 17 clients');
+const expectedConnectPaths = connectIds
+  .map((id) => '/docs/' + id.replace(/\/index$/, '') + '/')
+  .sort();
+const actualConnectPaths = [...pages.keys()].filter((path) => path.startsWith('/docs/connect/')).sort();
+assert.deepEqual(actualConnectPaths, expectedConnectPaths, 'Connect navigation matches generated pages');
 const docsCount = [...pages.keys()].filter((p) => p.startsWith('/docs/')).length;
 assert.equal(docsCount, 53, 'All 53 docs pages are built');
 assert.ok((await readdir(join(dist, 'pagefind'))).includes('pagefind.js'), 'Pagefind index exists');
@@ -118,6 +139,8 @@ const SAMPLES = [
   { name: 'docs', path: '/docs/' },
   { name: 'docs-page', path: '/docs/concepts/access-plans/' },
   { name: 'docs-install', path: '/docs/start/install/' },
+  { name: 'docs-connect', path: '/docs/connect/' },
+  { name: 'docs-connect-librechat', path: '/docs/connect/librechat/' },
 ];
 const results = [];
 try {
@@ -210,6 +233,12 @@ try {
           await page.waitForFunction(() => document.querySelector('.code-bar .copy').textContent === 'Copied');
           assert.match(await page.evaluate(() => navigator.clipboard.readText()), /docker compose up -d/);
         }
+        if (sample.name === 'docs-connect-librechat') {
+          assert.ok(await page.locator('.codeblock').count() >= 1, label + ': client setup example');
+          await page.locator('.code-bar .copy').first().click();
+          await page.waitForFunction(() => document.querySelector('.code-bar .copy').textContent === 'Copied');
+          assert.match(await page.evaluate(() => navigator.clipboard.readText()), /baseURL/);
+        }
         if (sample.name === 'docs') {
           // Search: opens, finds a page and goes to it.
           await page.locator('.search-open').click();
@@ -221,6 +250,11 @@ try {
           await page.locator('#search-results a').first().click();
           await page.waitForURL(url + hit.split('#')[0] + '*');
           await page.goto(url + '/docs/', { waitUntil: 'networkidle' });
+          await page.locator('.search-open').click();
+          await page.locator('#search-input').fill('Open WebUI v0.11.4');
+          await page.locator('#search-results a').first().waitFor();
+          const connectHit = await page.locator('#search-results a').first().getAttribute('href');
+          assert.ok(connectHit.startsWith('/docs/connect/open-webui/'), label + ': Connect guide search result ' + connectHit);
           await page.keyboard.press('/');
           assert.equal(await page.locator('#search').evaluate((d) => d.open), true, `${label}: slash opens search`);
           await page.keyboard.press('Escape');
