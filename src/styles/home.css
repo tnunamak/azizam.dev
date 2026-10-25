@@ -1,9 +1,9 @@
 .home { padding-top: 0; }
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
   padding-top: 28px;
   padding-bottom: 28px;
 }
@@ -25,14 +25,15 @@
 .preview-note { margin: 14px 0 0; color: var(--muted); font-size: var(--type-small); line-height: 1.45; }
 
 .product-proof {
-  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
 }
-.product-proof picture, .product-proof img { display: block; width: 100%; height: auto; }
+.product-proof picture, .product-proof img { display: block; width: auto; max-width: 100%; height: auto; }
 .product-proof figcaption { padding: 10px 13px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.4; }
 
 .how { scroll-margin-top: 24px; }
@@ -51,8 +52,8 @@
 .how-line .arrow { color: var(--accent); font-size: 20px; font-weight: 400; }
 
 .claims, .setup, .limits { margin-top: var(--section-space); }
-.home h2, .home h3 { font-size: var(--type-h2); font-weight: 550; line-height: 1.25; letter-spacing: -.015em; }
-.home h2 { margin: 0 0 24px; }
+.home h2 { margin: 0 0 24px; font-size: 28px; font-weight: 550; line-height: 34px; letter-spacing: -.015em; }
+.home h3 { margin: 0; font-size: 24px; font-weight: 500; line-height: 30px; letter-spacing: -.015em; }
 .claim-list { border-top: 1px solid var(--line); }
 .claim-row {
   display: grid;
@@ -72,7 +73,7 @@
 @media (max-width: 900px) {
   .hero { grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
   .hero-copy { max-width: 680px; }
-  .product-proof { width: min(100%, 620px); }
+  .product-proof { margin-inline: auto; }
 }
 @media (max-width: 720px) {
   .hero { gap: 20px; padding-top: 22px; padding-bottom: 18px; }
@@ -81,10 +82,10 @@
   .hero-actions { gap: 8px; margin-top: 18px; }
   .hero-actions .btn { white-space: nowrap; }
   .preview-note { margin-top: 10px; }
-  .product-proof { width: min(100%, 340px); margin-inline: auto; }
+  .product-proof { width: min(100%, 342px); }
   .product-proof figcaption { padding: 8px 10px; font-size: 12px; }
-  .how-line { gap: 2px 8px; padding-block: 14px 18px; font-size: 15px; }
-  .how-line .arrow { font-size: 17px; }
+  .how-line { flex-direction: column; align-items: flex-start; gap: 8px; padding-block: 14px 18px; font-size: 15px; }
+  .how-line .arrow { font-size: 17px; line-height: 1; transform: rotate(90deg); transform-origin: center; }
   .claims, .setup, .limits { margin-top: 52px; }
   .home h2 { margin-bottom: 16px; }
   .claim-row { grid-template-columns: minmax(0, 1fr); gap: 4px; padding-block: 17px; }

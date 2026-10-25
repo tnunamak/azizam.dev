@@ -4,7 +4,7 @@ import { GET_STARTED } from '../config';
 import '../styles/home.css';
 
 const productDescription =
-  'Azizam is a self-hosted gateway. Point the apps you already use at it. Each person and app gets its own key and plan, requests run on your own engines first, and every request leaves a receipt.';
+  'Azizam is a self-hosted gateway. Point the apps you already use at it. Each person and app gets its own key and plan, requests run on your own engines first, and Usage records who asked, which model ran, and where.';
 ---
 <Base title="One address for the AI you run · Azizam" description={productDescription} bodyClass="home">
   <main id="content" tabindex="-1" class="home">
@@ -16,21 +16,23 @@ const productDescription =
           <a class="btn btn-primary" data-cta href={GET_STARTED}>Read the setup guide</a>
           <a class="btn btn-secondary" data-cta href="#how">See how it works</a>
         </div>
-        <p class="preview-note">Private preview. Access is by invitation.</p>
+        <p class="preview-note">Private preview. Access is by invitation from the person who runs the gateway.</p>
       </div>
 
       <figure class="product-proof" aria-labelledby="proof-caption">
         <picture>
-          <source srcset="/images/apps-keys-1440-dark.webp" media="(prefers-color-scheme: dark)" />
+          <source srcset="/images/apps-keys-hero-phone-dark.webp" media="(max-width: 900px) and (prefers-color-scheme: dark)" width="340" height="397" />
+          <source srcset="/images/apps-keys-hero-phone-light.webp" media="(max-width: 900px)" width="340" height="397" />
+          <source srcset="/images/apps-keys-hero-desktop-dark.webp" media="(prefers-color-scheme: dark)" width="1100" height="245" />
           <img
-            src="/images/apps-keys-1440-light.webp"
-            width="1440"
-            height="1260"
-            alt="Azizam's Apps and keys screen, showing separate apps and access plans."
+            src="/images/apps-keys-hero-desktop-light.webp"
+            width="1100"
+            height="245"
+            alt="OpenWhispr laptop app card with its local-only plan, one key row, and keyless access."
             fetchpriority="high"
           />
         </picture>
-        <figcaption id="proof-caption">Screens from a seeded demo gateway.</figcaption>
+        <figcaption id="proof-caption">Apps &amp; keys, with demo data.</figcaption>
       </figure>
     </section>
 
@@ -38,7 +40,7 @@ const productDescription =
       <p class="how-line">
         <span>Your apps</span>
         <span class="arrow" aria-hidden="true">→</span>
-        <span>Azizam (key, plan, receipt)</span>
+        <span>Azizam (key, plan, usage)</span>
         <span class="arrow" aria-hidden="true">→</span>
         <span>your engines, or a provider you allow</span>
       </p>
@@ -49,7 +51,7 @@ const productDescription =
       <div class="claim-list">
         <article class="claim-row">
           <h3>One address</h3>
-          <p>Use one OpenAI-compatible address for apps that speak OpenAI, Anthropic, or Ollama. Agents can connect through MCP.</p>
+          <p>Connect your apps through Azizam's supported OpenAI, Anthropic, and Ollama API routes. Agents can connect through MCP.</p>
         </article>
         <article class="claim-row">
           <h3>A key and plan for each person and app</h3>
@@ -60,15 +62,15 @@ const productDescription =
           <p>Requests run on your own engines first. A paid provider is used only when the access plan allows it.</p>
         </article>
         <article class="claim-row">
-          <h3>A receipt for every request</h3>
-          <p>Each receipt shows who asked, which model ran, where it ran, and its recorded cost.</p>
+          <h3>A record of each request</h3>
+          <p>Usage shows who asked, which model ran, where it ran, and what it cost.</p>
         </article>
       </div>
     </section>
 
     <section id="setup" class="setup wrap" aria-labelledby="setup-title">
       <h2 id="setup-title">Set it up</h2>
-      <p>Follow the guide to set up the gateway, connect an engine you already run, and point an app at Azizam. <a href={GET_STARTED}>Read the setup guide</a>.</p>
+      <p>If you run a gateway, the setup guide covers installing it and inviting the people who use it. <a href="/docs/start/install/">Read the setup guide</a></p>
     </section>
 
     <section id="limits" class="limits wrap" aria-labelledby="limits-title">

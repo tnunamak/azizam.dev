@@ -29,8 +29,14 @@ typography:
     letterSpacing: "-0.025em"
   heading:
     fontFamily: "DM Sans Variable, sans-serif"
-    fontSize: "clamp(24px, 2vw, 28px)"
+    fontSize: "28px"
     fontWeight: 550
+    lineHeight: "34px"
+  claimTitle:
+    fontFamily: "DM Sans Variable, sans-serif"
+    fontSize: "24px"
+    fontWeight: 500
+    lineHeight: "30px"
   body:
     fontFamily: "DM Sans Variable, sans-serif"
     fontSize: "18px"
@@ -50,11 +56,11 @@ spacing:
 
 ## Direction
 
-The landing page follows an independent software editorial: one direct outcome, one real product screen, then the request path. Prose stays open on the page. Thin rules separate the four product claims. The screenshot has one restrained frame. The screenshot frame uses 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
+The landing page follows an independent software editorial: one direct outcome, a readable product-screen crop, then the request path. The hero uses one column, top-aligns the copy, and separates copy from proof by 24px; phone spacing is 20px. The hero copy precedes a 1100px-wide desktop proof crop. Prose stays open on the page. Thin rules separate the four product claims. The screenshot has one restrained frame. The screenshot frame uses 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
 
 ## Typography
 
-Newsreader Variable carries the display promise. DM Sans Variable handles navigation, body text, captions, and controls. Both are self-hosted under SIL Open Font License 1.1. The page uses one responsive display scale, one responsive heading scale, and 18px body text. Paragraphs stay near 65 characters per line. Smaller utility sizes serve navigation, labels, captions, and code.
+Newsreader Variable carries the display promise. DM Sans Variable handles navigation, body text, captions, and controls. Both are self-hosted under SIL Open Font License 1.1. The serif hero keeps its responsive scale. Homepage section headings use 28px type with 34px line height; claim-row titles use 24px type, 30px line height, and weight 500. Body text remains 18px. Paragraphs stay near 65 characters per line. Smaller utility sizes serve navigation, labels, captions, and code.
 
 ## Colour
 
@@ -62,10 +68,10 @@ Light surfaces use the app palette: background `#f3f6f6`, ink `#10232a`, primary
 
 ## Layout and interaction
 
-The header lists Examples, Docs, and API, with the setup guide as its primary action. The footer links to the product, Docs, API, and Security. Home claims use plain rows with thin separators; the process is one line with arrows. The setup section has one short paragraph and a link, with no homepage commands.
+The header lists Examples, Docs, and API, with the setup guide as its primary action. The footer links to the product, Docs, API, and Security; they share a 24px flex gap, use 0px horizontal padding, align the first link with the content edge, and keep a 44px minimum hit height. Home claims use plain rows with thin separators. The process stays on one line with right arrows above 720px, then stacks its stages with 90° down arrows and an 8px gap at 720px and below. The setup section has one short paragraph and a link to `/docs/start/install/`, with no homepage commands.
 
-The site respects system light and dark preferences, keyboard focus, reduced motion, and a 390px viewport. There is no authored motion on the landing page. Contrast must meet WCAG AA in both themes.
+The site respects system light and dark preferences, keyboard focus, reduced motion, and a 390px viewport with 20px side gutters. The 340px-wide phone proof crop appears at widths of 900px and below in a frame capped at 342px, including its border. Both proof crops display at native size at the 1440px and 390px reference widths. There is no authored motion on the landing page. Contrast must meet WCAG AA in both themes.
 
 ## Evidence
 
-The landing page uses the seeded Apps & Keys screen in light and dark themes, captioned “Screens from a seeded demo gateway.” Its abbreviated key values and private address are removed from the distributed image. No testimonials, counts, live statuses, example costs, timings, or generated replies are used as proof.
+The landing page uses light and dark crops of the seeded Apps & Keys screen, captioned “Apps & keys, with demo data.” The desktop crop is 1100×245px from the 1440px capture; the phone crop is 340×397px from the 390px capture. The phone capture keeps its ellipsis row action and fixed bottom navigation. Abbreviated key values and the private address are removed from the distributed images. No testimonials, counts, live statuses, example costs, timings, or generated replies are used as proof.

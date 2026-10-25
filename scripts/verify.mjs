@@ -37,11 +37,15 @@ if (!url) {
       res.writeHead(404, { 'content-type': 'text/plain' }).end('not found');
     }
   });
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  url = `http://127.0.0.1:${server.address().port}`;
+  await new Promise((resolve) => server.listen(18200, '127.0.0.1', resolve));
+  url = 'http://127.0.0.1:18200';
 }
 
 const HOME_H1 = 'One address for the AI you run.';
+const HOME_SUBHEAD = 'Azizam is a self-hosted gateway. Point the apps you already use at it. Each person and app gets its own key and plan, requests run on your own engines first, and Usage records who asked, which model ran, and where.';
+const ONE_ADDRESS_COPY = "Connect your apps through Azizam's supported OpenAI, Anthropic, and Ollama API routes. Agents can connect through MCP.";
+const RECORD_COPY = 'Usage shows who asked, which model ran, where it ran, and what it cost.';
+const SETUP_COPY = 'If you run a gateway, the setup guide covers installing it and inviting the people who use it. Read the setup guide';
 const ENGINE_NAMES = /litellm|comfyui|llama\.cpp|llama-server|vllm|lm studio|invokeai|stable diffusion webui/i;
 // 192.168.1.0/24 is the generic example range in the access-plan docs, not a real host.
 const PRIVATE = /vivid\.fish|192\.168\.(?!1\.0\/24)|tnunamak|\.local\b|opk_[a-z0-9]{8,}/i;
@@ -166,8 +170,59 @@ try {
               await page.setViewportSize({ width: narrowWidth, height: 844 });
               assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `home ${narrowWidth} ${theme}: sideways scroll`);
               assert.equal(await page.locator('.hero-actions').evaluate((el) => el.scrollWidth > el.clientWidth), false, `home ${narrowWidth} ${theme}: CTA overflow`);
+              const narrowFlow = await page.locator('.how-line').evaluate((el) => {
+                const children = [...el.children];
+                const arrows = children.filter((child) => child.classList.contains('arrow'));
+                const boxes = children.map((child) => child.getBoundingClientRect());
+                const arrowsPointDown = arrows.length === 2 && arrows.every((arrow) => {
+                  const matrix = new DOMMatrixReadOnly(getComputedStyle(arrow).transform);
+                  return Math.abs(matrix.a) < 0.01 && matrix.b > 0.99 && matrix.c < -0.99 && Math.abs(matrix.d) < 0.01;
+                });
+                return {
+                  direction: getComputedStyle(el).flexDirection,
+                  children: children.map((child) => child.textContent.trim()),
+                  arrowsPointDown,
+                  boxes: boxes.map(({ top, bottom }) => ({ top, bottom })),
+                };
+              });
+              assert.equal(narrowFlow.direction, 'column', `home ${narrowWidth} ${theme}: flow stages stack vertically`);
+              assert.deepEqual(narrowFlow.children, ['Your apps', '→', 'Azizam (key, plan, usage)', '→', 'your engines, or a provider you allow']);
+              assert.equal(narrowFlow.arrowsPointDown, true, `home ${narrowWidth} ${theme}: exactly two arrows point down`);
+              assert.ok(narrowFlow.boxes.every((box, index) => index === 0 || narrowFlow.boxes[index - 1].bottom <= box.top + 1), `home ${narrowWidth} ${theme}: flow stages do not overlap`);
             }
             await page.setViewportSize({ width, height: 844 });
+            await page.addStyleTag({ content: 'html { scrollbar-width: none !important; } html::-webkit-scrollbar { display: none !important; }' });
+            const gutters = await page.locator('.hero.wrap').evaluate((el) => {
+              const rect = el.getBoundingClientRect();
+              const style = getComputedStyle(el);
+              return {
+                viewport: innerWidth,
+                client: document.documentElement.clientWidth,
+                left: Math.round(rect.left),
+                right: Math.round(innerWidth - rect.right),
+                paddingLeft: Number.parseFloat(style.paddingLeft),
+                paddingRight: Number.parseFloat(style.paddingRight),
+              };
+            });
+            assert.deepEqual(gutters, { viewport: 390, client: 390, left: 0, right: 0, paddingLeft: 20, paddingRight: 20 }, `home ${width} ${theme}: full 390px layout and 20px gutters`);
+            const flow = await page.locator('.how-line').evaluate((el) => {
+              const children = [...el.children];
+              const arrows = children.filter((child) => child.classList.contains('arrow'));
+              const arrowPointsDown = arrows.every((arrow) => {
+                const matrix = new DOMMatrixReadOnly(getComputedStyle(arrow).transform);
+                return Math.abs(matrix.a) < 0.01 && matrix.b > 0.99 && matrix.c < -0.99 && Math.abs(matrix.d) < 0.01;
+              });
+              return {
+                direction: getComputedStyle(el).flexDirection,
+                children: children.map((child) => child.textContent.trim()),
+                arrowPointsDown,
+                top: children.map((child) => child.getBoundingClientRect().top),
+              };
+            });
+            assert.equal(flow.direction, 'column', `home ${width} ${theme}: flow stages stack vertically`);
+            assert.deepEqual(flow.children, ['Your apps', '→', 'Azizam (key, plan, usage)', '→', 'your engines, or a provider you allow']);
+            assert.equal(flow.arrowPointsDown, true, `home ${width} ${theme}: flow arrows point down`);
+            assert.ok(flow.top.every((top, index) => index === 0 || top >= flow.top[index - 1]), `home ${width} ${theme}: flow stages do not share a line`);
           }
           const small = await page.locator(TAP).evaluateAll((els) => els
             .filter((el) => el.checkVisibility({ contentVisibilityAuto: true, visibilityProperty: true }))
@@ -179,6 +234,7 @@ try {
         const record = { sample: sample.name, width, theme, height: height1, kb: Math.round(bytes / 1024) };
         if (sample.name === 'home') {
           assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' '), HOME_H1);
+          assert.equal(await page.locator('.hero-description').innerText(), HOME_SUBHEAD);
           const words = (await page.locator('main').innerText()).split(/\s+/).filter(Boolean).length;
           assert.ok(words >= 150 && words <= 500, `${label}: ${words} words`);
           assert.ok(height1 <= (width === 1440 ? 6000 : 9000), `${label}: page height ${height1}`);
@@ -193,15 +249,46 @@ try {
           assert.equal(await page.locator('[data-cta]').count(), 2);
           assert.deepEqual(await page.locator('[data-cta]').allInnerTexts(), ['Read the setup guide', 'See how it works']);
           assert.deepEqual(await page.locator('[data-cta]').evaluateAll((els) => els.map((el) => el.getAttribute('href'))), ['/docs/start/install/', '#how']);
-          assert.equal(await page.locator('.preview-note').innerText(), 'Private preview. Access is by invitation.');
-          assert.equal(await page.locator('.product-proof figcaption').innerText(), 'Screens from a seeded demo gateway.');
+          assert.equal(await page.locator('.preview-note').innerText(), 'Private preview. Access is by invitation from the person who runs the gateway.');
+          assert.equal(await page.locator('.product-proof figcaption').innerText(), 'Apps & keys, with demo data.');
           assert.equal(await page.locator('.claim-row').count(), 4);
-          assert.match((await page.locator('.how-line').innerText()).replace(/\s+/g, ' '), /Your apps.*Azizam \(key, plan, receipt\).*your engines, or a provider you allow/);
+          assert.deepEqual(await page.locator('.claim-row h3').allInnerTexts(), ['One address', 'A key and plan for each person and app', 'Your engines first', 'A record of each request']);
+          assert.equal(await page.locator('.claim-row').nth(0).locator('p').innerText(), ONE_ADDRESS_COPY);
+          assert.equal(await page.locator('.claim-row').nth(3).locator('p').innerText(), RECORD_COPY);
+          assert.equal(await page.locator('.setup p').innerText(), SETUP_COPY);
+          assert.equal(await page.locator('.setup p a').getAttribute('href'), '/docs/start/install/');
+          assert.match((await page.locator('.how-line').innerText()).replace(/\s+/g, ' '), /Your apps.*Azizam \(key, plan, usage\).*your engines, or a provider you allow/);
           assert.equal(await page.locator('.proof-card, .early, .command-block, .quick-steps').count(), 0);
           assert.equal(await page.locator('.preview-note').count(), 1);
           const image = page.locator('.product-proof img');
-          assert.equal(await image.evaluate((img) => img.naturalWidth), 1440, `${label}: product screenshot loaded`);
-          assert.equal(new URL(await image.evaluate((img) => img.currentSrc)).pathname, `/images/apps-keys-1440-${theme}.webp`, `${label}: matching theme screenshot`);
+          const crop = width === 1440 ? { name: 'desktop', width: 1100, height: 245 } : { name: 'phone', width: 340, height: 397 };
+          assert.equal(await image.evaluate((img) => img.naturalWidth), crop.width, `${label}: proof crop width`);
+          assert.equal(await image.evaluate((img) => img.naturalHeight), crop.height, `${label}: proof crop height`);
+          assert.deepEqual(await image.evaluate((img) => ({ width: Math.round(img.getBoundingClientRect().width), height: Math.round(img.getBoundingClientRect().height) })), { width: crop.width, height: crop.height }, `${label}: proof crop displays at native size`);
+          assert.equal(new URL(await image.evaluate((img) => img.currentSrc)).pathname, `/images/apps-keys-hero-${crop.name}-${theme}.webp`, `${label}: matching theme and viewport crop`);
+          const type = await page.locator('#content').evaluate((root) => ({
+            section: [...root.querySelectorAll('h2')].map((el) => ({ size: getComputedStyle(el).fontSize, line: getComputedStyle(el).lineHeight })),
+            row: [...root.querySelectorAll('.claim-row h3')].map((el) => ({ size: getComputedStyle(el).fontSize, line: getComputedStyle(el).lineHeight, weight: getComputedStyle(el).fontWeight })),
+          }));
+          assert.deepEqual(type.section, [{ size: '28px', line: '34px' }, { size: '28px', line: '34px' }, { size: '28px', line: '34px' }]);
+          assert.ok(type.row.every((style) => style.size === '24px' && style.line === '30px' && style.weight === '500'));
+          const footer = await page.locator('.foot-links').evaluate((nav) => {
+            const wrap = nav.parentElement;
+            const wrapRect = wrap.getBoundingClientRect();
+            const wrapStyle = getComputedStyle(wrap);
+            const links = [...nav.querySelectorAll('a')];
+            const range = document.createRange();
+            range.selectNodeContents(links[0]);
+            return {
+              gap: getComputedStyle(nav).gap,
+              textLeft: Math.round(range.getBoundingClientRect().left),
+              contentLeft: Math.round(wrapRect.left + Number.parseFloat(wrapStyle.paddingLeft)),
+              heights: links.map((link) => Math.round(link.getBoundingClientRect().height)),
+            };
+          });
+          assert.equal(footer.gap, '24px');
+          assert.equal(footer.textLeft, footer.contentLeft, `${label}: first footer text aligns with content edge`);
+          assert.ok(footer.heights.every((height) => height >= 44), `${label}: footer links have 44px hit areas`);
           assert.equal(await page.locator('.brand .mark').count(), 1);
           // Header: current page and menu.
           assert.equal(await page.locator('.brand').first().getAttribute('aria-current'), 'page');

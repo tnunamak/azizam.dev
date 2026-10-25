@@ -178,8 +178,8 @@ h1, h2, h3, p, li { overflow-wrap: anywhere; }
 
 /* Footer */
 .foot { margin-top: var(--section-space); border-top: 1px solid var(--line); padding-block: 22px 36px; color: var(--muted); font-size: var(--type-small); }
-.foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; }
-.foot-links a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding-inline: 4px; color: var(--text); }
+.foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+.foot-links a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding-inline: 0; color: var(--text); }
 .foot-links .footer-product { font-weight: 650; text-decoration: none; }
 
 .lede { margin: 16px 0 0; max-width: 65ch; font-size: var(--type-body); line-height: var(--leading); color: var(--muted); }
