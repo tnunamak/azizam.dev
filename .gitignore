@@ -8,3 +8,7 @@ dist/
 !.env.example
 node_modules/
 .verify-artifacts/
+.ishoo/
+**/.ishoo/*.local.toml
+**/.ishoo/cache/
+**/.ishoo/worktrees/
