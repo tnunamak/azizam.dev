@@ -23,7 +23,7 @@ colors:
 typography:
   display:
     fontFamily: "Newsreader Variable, serif"
-    fontSize: "clamp(44px, 5.4vw, 72px)"
+    fontSize: "clamp(44px, 5vw, 68px)"
     fontWeight: 430
     lineHeight: 1.02
     letterSpacing: "-0.025em"
@@ -56,7 +56,7 @@ spacing:
 
 ## Direction
 
-The landing page follows an independent software editorial: one direct outcome, a readable product-screen crop, then the request path. The hero uses one column, top-aligns the copy, and separates copy from proof by 24px; phone spacing is 20px. The hero copy precedes a 1100px-wide desktop proof crop. Prose stays open on the page. Thin rules separate the four product claims. The screenshot has one restrained frame. The screenshot frame uses 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
+The landing page follows an independent software editorial: one outcome line, then real Azizam output (an image and a speech clip, each labelled with its date and model), then three chapters (Use, Share, Understand), a developer request, the request flow and the limits. The hero copy sits full width above a band of outputs that begins in the first screen. Borders appear only around real artifacts: generated outputs, the Apps & keys screenshot, the receipt and the code panel. Prose stays open on the page. Artifacts use 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
 
 ## Typography
 
@@ -74,4 +74,4 @@ The site respects system light and dark preferences, keyboard focus, reduced mot
 
 ## Evidence
 
-The landing page uses light and dark crops of the seeded Apps & Keys screen, captioned “Apps & keys, with demo data.” The desktop crop is 1100×245px from the 1440px viewport capture; the phone crop is 340×397px from the 390px viewport capture. A viewport capture, not a full-page one, keeps the fixed bottom navigation where a phone shows it. The phone crop ends above that navigation and above transient notices, so no tab bar or toast sits over the content. Masked key prefixes appear as nine muted bullets in monospace on their row backgrounds; no real values appear in the distributed images. No testimonials, counts, live statuses, example costs, timings, or generated replies are used as proof.
+The landing page uses light and dark crops of the seeded Apps & Keys screen, captioned “Apps & keys, with demo data.” The desktop crop is 1100×245px from the 1440px viewport capture; the phone crop is 340×397px from the 390px viewport capture. A viewport capture, not a full-page one, keeps the fixed bottom navigation where a phone shows it. The phone crop ends above that navigation and above transient notices, so no tab bar or toast sits over the content. Masked key prefixes appear as nine muted bullets in monospace on their row backgrounds; no real values appear in the distributed images. Generated outputs appear only as labelled recordings: each shows its date, requested and resolved model, and receipt id. Where the gateway recorded no cost, the page says “not recorded”. No testimonials, counts, live statuses, or invented costs and timings are used as proof. The one budget figure is labelled as an example.

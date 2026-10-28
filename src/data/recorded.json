@@ -1,0 +1,10 @@
+{
+  "recordedOn": "2026-10-28",
+  "chat": {
+    "prompt": "We are a family of four with a $60 food budget for the week. We have chicken thighs, rice, eggs, carrots and onions. Give a 5-dinner plan and one shopping list for what we still need. Keep it under 220 words.",
+    "answer": "With a tight $60 budget for four people, leverage your existing staples: chicken thighs, rice, eggs, carrots, and onions. These ingredients form the backbone of five hearty, low-cost dinners.\n\n**Day 1: Chicken & Vegetable Fried Rice**\nSauté diced chicken, carrots, and onions. Cook rice separately, then stir-fry everything together with eggs scrambled into the wok. Season with soy sauce or salt.\n\n**Day 2: One-Pot Chicken and Rice Stew**\nBrown chicken thighs, remove, then sauté onions and carrots. Add rice and broth (or water with bouillon) to simmer until the rice is tender and the chicken is cooked through.\n\n**Day 3: Egg Fried Rice with Leftover Chicken**\nUse any remaining chicken from Day 1 or 2. Sauté chopped onions and carrots, add cold rice, and scramble in two eggs. Season heavily with garlic powder or soy sauce.\n\n**Day 4: Baked Chicken Thighs with Roasted Vegetables**\nSeason chicken thighs with salt, pepper, and paprika. Toss chopped carrots and onions in oil. Bake everything on one sheet pan until the chicken is crispy and veggies are tender. Serve over rice.\n\n**Day 5: Simple Chicken Soup**\nSimmer remaining chicken bones/meat with chopped onions, carrots, and garlic in water. Add rice to the broth for the last 15 minutes. Season with herbs.\n\n**Shopping List**\nTo enhance flavor and nutrition within your budget, buy:\n*   1 bottle soy sauce ($3)\n*   1 box chicken bouillon cubes ($2)\n*   1 bag frozen mixed vegetables ($2)\n*   1 can diced tomatoes ($1)\n*   Garlic powder and paprika ($5)\n*   Cooking oil if needed ($5)\n\nThis plan maximizes your inventory while keeping costs low. Total estimated shopping cost: ~$18, leaving room for emergencies.",
+    "requested_model": "current-fast",
+    "resolved_model": "qwen3.8-flash-next",
+    "receipt": "req_8f8b949500084b0f98619b44bfd5c243"
+  }
+}

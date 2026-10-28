@@ -1,79 +1,195 @@
 ---
 import Base from '../layouts/Base.astro';
+import Mark from '../components/Mark.astro';
 import { GET_STARTED } from '../config';
+import recorded from '../data/recorded.json';
 import '../styles/home.css';
 
 const productDescription =
   'Azizam is a self-hosted gateway. Point the apps you already use at it. Each person and app gets its own key and plan, requests run on your own engines first, and Usage records who asked, which model ran, and where.';
+const recordedOn = '28 October 2026';
+
+// The chat answer is model output. Keep its line breaks and bold headings, drop nothing else.
+const answerLines = [];
+for (const raw of recorded.chat.answer.split('\n')) {
+  const line = raw.trim();
+  if (!line) continue;
+  const bullet = /^\*\s+/.test(line);
+  const text = bullet ? line.replace(/^\*\s+/, '') : line;
+  const last = answerLines.at(-1);
+  if (bullet) {
+    if (last?.kind === 'ul') last.items.push(text);
+    else answerLines.push({ kind: 'ul', items: [text] });
+  } else {
+    answerLines.push({ kind: 'p', text });
+  }
+}
+// Split on ** so that odd segments render as <strong>.
+const bold = (text) => text.split('**');
 ---
-<Base title="One address for the AI you run · Azizam" description={productDescription} bodyClass="home">
+<Base title="AI for your people. On your terms. · Azizam" description={productDescription} bodyClass="home">
   <main id="content" tabindex="-1" class="home">
     <section class="hero wrap" aria-labelledby="home-title">
       <div class="hero-copy">
-        <h1 id="home-title">One address for the AI you run.</h1>
-        <p class="hero-description">{productDescription}</p>
+        <p class="eyebrow"><Mark size={22} /> Self-hosted AI gateway</p>
+        <h1 id="home-title">
+          <span class="h1-line">AI for your people.</span>
+          <span class="h1-line h1-accent">On your terms.</span>
+        </h1>
+        <p class="hero-description">Azizam runs the image, speech, music and chat models you set up, and gives each person and app its own key and access plan.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" data-cta href={GET_STARTED}>Read the setup guide</a>
-          <a class="btn btn-secondary" data-cta href="#how">See how it works</a>
+          <a class="btn btn-primary" data-cta href="#use">See what it makes</a>
+          <a class="btn btn-secondary" data-cta href={GET_STARTED}>Read the setup guide</a>
         </div>
         <p class="preview-note">Private preview. Access is by invitation from the person who runs the gateway.</p>
       </div>
 
-      <figure class="product-proof" aria-labelledby="proof-caption">
+      <div class="hero-proof">
+        <figure class="artifact artifact-image">
+          <img
+            src="/media/use-kitchen.webp"
+            width="900"
+            height="900"
+            fetchpriority="high"
+            alt="Flat illustration of a family kitchen on a Sunday morning: two copper pots on a teal range, utensils on the counter. No people or text."
+          />
+          <figcaption>Image from <code>image-fast</code>. Recorded through Azizam on {recordedOn}.</figcaption>
+        </figure>
+        <figure class="artifact artifact-audio">
+          <audio controls preload="none" src="/media/use-speech.mp3" aria-label="Speech clip: Dinner is at seven. The rice is on, and the beans need about twenty more minutes."></audio>
+          <figcaption>
+            <span class="quote">“Dinner is at seven. The rice is on, and the beans need about twenty more minutes.”</span>
+            Speech from <code>tts-1</code>, 5.7 s. Recorded through Azizam on {recordedOn}.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="use" class="chapter wrap" aria-labelledby="use-title">
+      <p class="eyebrow">Use</p>
+      <h2 id="use-title">What people make with it</h2>
+      <p class="chapter-lede">Each item is one request sent through Azizam. The outputs are unedited.</p>
+      <div class="artifact-grid">
+        <figure class="artifact">
+          <img
+            src="/media/use-park-map.webp"
+            width="900"
+            height="900"
+            loading="lazy"
+            alt="Simple vector map of a neighbourhood park: a pond, footpaths, trees, a playground and a bench."
+          />
+          <figcaption>
+            Image from <code>image-fast</code>, run as <code>flux2-klein-4b</code>. Recorded through Azizam on {recordedOn}.
+            <span class="receipt-id">req_107540fc8d7d4491bc3fe9a18e4c6b20</span>
+          </figcaption>
+        </figure>
+
+        <figure class="artifact artifact-audio">
+          <audio controls preload="none" src="/media/use-music.mp3" aria-label="Instrumental music clip, 15 seconds"></audio>
+          <figcaption>
+            Music from <code>music</code>, run as <code>ace-step-1.5-xl-turbo</code>, 15 s. Recorded through Azizam on {recordedOn}.
+            <span class="receipt-id">req_f5787a780a7f43908d149afbfb220f31</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <figure class="artifact artifact-text">
+          <blockquote class="question">
+            <p>{recorded.chat.prompt}</p>
+          </blockquote>
+          <div class="answer">
+            {answerLines.map((line) =>
+              line.kind === 'ul' ? (
+                <ul>
+                  {line.items.map((item) => <li>{bold(item).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</li>)}
+                </ul>
+              ) : (
+                <p>{bold(line.text).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</p>
+              ),
+            )}
+          </div>
+          <figcaption>
+            Chat from <code>current-fast</code>, run as <code>qwen3.8-flash-next</code>. Recorded through Azizam on {recordedOn}.
+            <span class="receipt-id">{recorded.chat.receipt}</span>
+          </figcaption>
+        </figure>
+    </section>
+
+    <section id="share" class="chapter wrap" aria-labelledby="share-title">
+      <p class="eyebrow">Share</p>
+      <h2 id="share-title">A key and a plan for each person and app</h2>
+      <p class="chapter-lede">
+        A key belongs to one person or app. Its access plan sets which models it may use and the spend cap for it. Revoke the key and that person or app stops.
+      </p>
+      <figure class="artifact artifact-keys">
         <picture>
-          <source srcset="/images/apps-keys-hero-phone-dark.webp" media="(max-width: 900px) and (prefers-color-scheme: dark)" width="340" height="397" />
-          <source srcset="/images/apps-keys-hero-phone-light.webp" media="(max-width: 900px)" width="340" height="397" />
           <source srcset="/images/apps-keys-hero-desktop-dark.webp" media="(prefers-color-scheme: dark)" width="1100" height="245" />
           <img
             src="/images/apps-keys-hero-desktop-light.webp"
             width="1100"
             height="245"
-            alt="Apps and keys: an app card with its access plan, a key row, and an add-key action."
-            fetchpriority="high"
+            alt="Apps and keys: an app card with its access plan, a key row with a masked value, and an add-key action."
           />
         </picture>
-        <figcaption id="proof-caption">Apps &amp; keys, with demo data.</figcaption>
+        <figcaption>Apps &amp; keys, with demo data.</figcaption>
+      </figure>
+      <p class="example"><strong>Example budget, not a price:</strong> one family plan with chat and image models and a $5 monthly spend cap. You choose the models and caps.</p>
+    </section>
+
+    <section id="understand" class="chapter wrap" aria-labelledby="understand-title">
+      <p class="eyebrow">Understand</p>
+      <h2 id="understand-title">Every request leaves a receipt</h2>
+      <p class="chapter-lede">
+        Usage shows who asked, which model ran, where it ran and what it cost. This is the receipt for the kitchen image above, with the app name removed.
+      </p>
+      <figure class="artifact receipt">
+        <dl>
+          <div><dt>Route</dt><dd>POST /v1/images/generations</dd></div>
+          <div><dt>Asked for</dt><dd>image-fast</dd></div>
+          <div><dt>Ran as</dt><dd>flux2-klein-4b</dd></div>
+          <div><dt>Where</dt><dd>Your own engine. Remote provider: no.</dd></div>
+          <div><dt>Status</dt><dd>ok</dd></div>
+          <div><dt>Time</dt><dd>19.7 s</dd></div>
+          <div><dt>Cost</dt><dd>Not recorded for a local engine.</dd></div>
+          <div><dt>Prompt saved</dt><dd>No</dd></div>
+          <div><dt>App</dt><dd>Removed</dd></div>
+          <div><dt>Receipt</dt><dd>req_2769d0d28bbb4bfdb98472e470446a96</dd></div>
+        </dl>
+        <figcaption>Recorded through Azizam on {recordedOn}.</figcaption>
       </figure>
     </section>
 
-    <section id="how" class="how wrap" aria-label="How it works">
-      <p class="how-line">
-        <span>Your apps</span>
-        <span class="arrow" aria-hidden="true">→</span>
-        <span>Azizam (key, plan, usage)</span>
-        <span class="arrow" aria-hidden="true">→</span>
-        <span>your engines, or a provider you allow</span>
+    <section id="developers" class="chapter wrap" aria-labelledby="developers-title">
+      <p class="eyebrow">Developers</p>
+      <h2 id="developers-title">Point an existing client at it</h2>
+      <p class="chapter-lede">
+        Use a key from your gateway with any OpenAI-compatible client. Use a model name your gateway serves; <code>GET /v1/models</code> lists them.
       </p>
+      <pre class="snippet" tabindex="0" aria-label="Example chat request"><code>{`curl http://127.0.0.1:5000/openai/v1/chat/completions \\
+  -H "Authorization: Bearer $AZIZAM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"model": "current-fast", "messages": [{"role": "user", "content": "Plan a 20-minute dinner for four."}], "max_tokens": 300}'`}</code></pre>
+      <dl class="routes">
+        <div><dt>OpenAI-compatible</dt><dd><code>/openai/v1</code></dd></div>
+        <div><dt>Anthropic Messages</dt><dd><code>/anthropic/v1/messages</code></dd></div>
+        <div><dt>Ollama-compatible</dt><dd><code>/ollama/api</code></dd></div>
+        <div><dt>MCP for agents</dt><dd><code>/mcp</code></dd></div>
+      </dl>
+      <p class="chapter-links"><a href="/docs/api/">API guides</a> list each route's supported methods and limits. <a href="/docs/start/install/">Setup guide</a></p>
     </section>
 
-    <section id="features" class="claims wrap" aria-labelledby="claims-title">
-      <h2 id="claims-title">What it gives you</h2>
-      <div class="claim-list">
-        <article class="claim-row">
-          <h3>One address</h3>
-          <p>Connect your apps through Azizam's supported OpenAI, Anthropic, and Ollama API routes. Agents can connect through MCP.</p>
-        </article>
-        <article class="claim-row">
-          <h3>A key and plan for each person and app</h3>
-          <p>Each person and app has its own key and access plan. The plan sets which models it may use and its spend cap.</p>
-        </article>
-        <article class="claim-row">
-          <h3>Your engines first</h3>
-          <p>Requests run on your own engines first. A paid provider is used only when the access plan allows it.</p>
-        </article>
-        <article class="claim-row">
-          <h3>A record of each request</h3>
-          <p>Usage shows who asked, which model ran, where it ran, and what it cost.</p>
-        </article>
-      </div>
+    <section id="how" class="chapter wrap" aria-labelledby="how-title">
+      <h2 id="how-title">How a request moves</h2>
+      <ol class="flow">
+        <li><span class="flow-name">Your apps and people</span></li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li><span class="flow-name">Azizam</span> checks the key and plan, and records a receipt</li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li><span class="flow-name">Your engines</span>, or a provider the plan allows</li>
+      </ol>
     </section>
 
-    <section id="setup" class="setup wrap" aria-labelledby="setup-title">
-      <h2 id="setup-title">Set it up</h2>
-      <p>If you run a gateway, the setup guide covers installing it and inviting the people who use it. <a href="/docs/start/install/">Read the setup guide</a></p>
-    </section>
-
-    <section id="limits" class="limits wrap" aria-labelledby="limits-title">
+    <section id="limits" class="chapter wrap" aria-labelledby="limits-title">
       <h2 id="limits-title">Before you rely on it</h2>
       <ul class="facts">
         <li>You supply and maintain your engines and model files. Azizam connects to them; it does not install them.</li>
