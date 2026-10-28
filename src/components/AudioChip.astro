@@ -1,0 +1,75 @@
+---
+// A compact player for a committed clip. The <audio> element does the playing; with JavaScript
+// its native controls are removed and this chip drives it. Without JavaScript the native controls stay.
+interface Props { src: string; title: string; duration: number; model: string; peaks: number[]; }
+const { src, title, duration, model, peaks } = Astro.props;
+const seconds = `${duration.toFixed(1)} s`;
+---
+<div class="chip" data-chip>
+  <button type="button" class="chip-play" data-play aria-label={`Play ${title}`}>
+    <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 5.8v12.4a.8.8 0 0 0 1.2.7l9.9-6.2a.8.8 0 0 0 0-1.4L9.7 5.1a.8.8 0 0 0-1.2.7Z" /></svg>
+    <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false" hidden><path d="M7 5.5h3.6v13H7zM13.4 5.5H17v13h-3.6z" /></svg>
+  </button>
+  <div class="chip-main">
+    <p class="chip-title">{title}</p>
+    <svg class="wave" viewBox={`0 0 ${peaks.length} 40`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      {peaks.map((p, i) => {
+        const h = Math.max(p * 34, 2.5);
+        return <rect class="bar" x={i + 0.2} y={20 - h / 2} width="0.6" height={h} rx="0.3" />;
+      })}
+    </svg>
+    <p class="chip-meta"><span>{seconds}</span><span aria-hidden="true">·</span><span>{model}</span></p>
+  </div>
+  <audio src={src} preload="none" controls data-audio aria-label={`${title}, ${seconds}`}></audio>
+</div>
+
+<style>
+  .chip { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+  .chip-play { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: var(--primary); color: var(--on-primary); }
+  .chip-play:hover { background: var(--accent); }
+  .chip-play svg { width: 20px; height: 20px; fill: currentColor; }
+  .chip-main { min-width: 0; flex: 1; }
+  .chip-title { margin: 0; overflow: hidden; color: var(--text); font-size: 14px; line-height: 1.35; white-space: nowrap; text-overflow: ellipsis; }
+  .wave { display: block; width: 100%; height: 34px; margin: 6px 0 4px; }
+  .bar { fill: var(--muted); opacity: .4; }
+  .bar.played { fill: var(--accent); opacity: 1; }
+  .chip-meta { display: flex; gap: 6px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+</style>
+
+<script>
+  // Progressive enhancement: take over playback UI only when this script runs.
+  const chips = [...document.querySelectorAll<HTMLElement>('[data-chip]')];
+  const players = chips.map((chip) => {
+    const audio = chip.querySelector<HTMLAudioElement>('[data-audio]')!;
+    const button = chip.querySelector<HTMLButtonElement>('[data-play]')!;
+    const playIcon = chip.querySelector<SVGElement>('.icon-play')!;
+    const pauseIcon = chip.querySelector<SVGElement>('.icon-pause')!;
+    const bars = [...chip.querySelectorAll<SVGRectElement>('.bar')];
+    const title = chip.querySelector('.chip-title')?.textContent?.trim() ?? 'clip';
+    audio.removeAttribute('controls');
+    audio.hidden = true;
+    const set = (playing: boolean) => {
+      playIcon.hidden = playing;
+      pauseIcon.hidden = !playing;
+      button.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${title}`);
+    };
+    const paint = () => {
+      const share = audio.duration ? audio.currentTime / audio.duration : 0;
+      bars.forEach((bar, i) => bar.classList.toggle('played', i / bars.length < share));
+    };
+    button.addEventListener('click', () => {
+      if (audio.paused) {
+        players.forEach((other) => { if (other.audio !== audio) other.audio.pause(); });
+        void audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+    audio.addEventListener('play', () => set(true));
+    audio.addEventListener('pause', () => set(false));
+    audio.addEventListener('ended', () => { set(false); paint(); bars.forEach((bar) => bar.classList.remove('played')); });
+    audio.addEventListener('timeupdate', paint);
+    return { audio };
+  });
+  void players;
+</script>

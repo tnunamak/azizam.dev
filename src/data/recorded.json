@@ -1,10 +1,104 @@
 {
   "recordedOn": "2026-10-28",
+  "images": [
+    {
+      "id": "plate",
+      "src": "/media/plate.webp",
+      "tag": "Dinner",
+      "alt": "Overhead view of a seared salmon fillet with lemon wedges, green beans and wild rice on a cream plate, with a folded napkin and fork at the edge of frame.",
+      "prompt": "Overhead photograph of a dinner plate: a seared salmon fillet with two lemon wedges, green beans and wild rice arranged on a matte cream ceramic plate, a folded linen napkin and a steel fork at the edge of frame, warm natural window light from the left, shallow depth of field, editorial food photography, no text, no hands",
+      "requested": "image",
+      "resolved": "krea2-turbo",
+      "receipt": "req_9f952f4c992c41fb87fd557022325edd",
+      "latency": "36.5 s"
+    },
+    {
+      "id": "nook",
+      "src": "/media/nook.webp",
+      "tag": "Reading nook",
+      "alt": "A worn brown leather armchair beside a tall window, with a grey throw, a stack of paperbacks and a lit brass lamp.",
+      "prompt": "Interior photograph of a cozy reading nook: a worn brown leather armchair beside a tall window, a grey wool throw over the arm, a stack of paperback books on a small oak side table, a brass reading lamp switched on, late afternoon light, a potted fern on the sill, soft natural film grain, photorealistic, no people, no text",
+      "requested": "image",
+      "resolved": "krea2-turbo",
+      "receipt": "req_90b209692d9649919956e5be43d37b77",
+      "latency": "29.0 s"
+    },
+    {
+      "id": "landscape",
+      "src": "/media/landscape.webp",
+      "tag": "Lake at dusk",
+      "alt": "A still mountain lake reflecting a dark ridge, with pines in silhouette on the shore and clouds lit orange and pink.",
+      "prompt": "Dramatic landscape at golden hour: a still mountain lake reflecting a dark ridge, low sun raking across wet grass in the foreground, a few pines in silhouette on the shore, clouds lit orange and pink, wide angle, photorealistic landscape photograph, no people, no text",
+      "requested": "image",
+      "resolved": "krea2-turbo",
+      "receipt": "req_9565d0bc12204bf19afb7590d91b3996",
+      "latency": "24.2 s"
+    },
+    {
+      "id": "mug",
+      "src": "/media/mug.webp",
+      "tag": "Ceramic mug",
+      "alt": "A hand-thrown speckled ash-glaze mug with a pulled handle, resting on raw linen beside a sprig of rosemary.",
+      "prompt": "Studio product photograph of a hand-thrown ceramic mug with a speckled ash glaze, a single pulled handle, resting on raw linen beside a small sprig of rosemary, soft diffused window light, warm neutral background, sharp focus, commercial product photography, no text, no logo",
+      "requested": "image",
+      "resolved": "krea2-turbo",
+      "receipt": "req_603f9efe20804465a3f1b65ebe5aca71",
+      "latency": "16.3 s"
+    }
+  ],
+  "speech": {
+    "title": "Dinner is at seven. The rice is on, and the beans need about twenty more minutes.",
+    "duration": 5.69,
+    "model": "tts-1",
+    "receipt": "req_373b308b93544cddb7a65c3154f62ab9"
+  },
+  "music": {
+    "title": "Instrumental music clip",
+    "duration": 15,
+    "requested": "music",
+    "resolved": "ace-step-1.5-xl-turbo",
+    "model": "ace-step-1.5-xl-turbo",
+    "receipt": "req_f5787a780a7f43908d149afbfb220f31"
+  },
   "chat": {
     "prompt": "We are a family of four with a $60 food budget for the week. We have chicken thighs, rice, eggs, carrots and onions. Give a 5-dinner plan and one shopping list for what we still need. Keep it under 220 words.",
     "answer": "With a tight $60 budget for four people, leverage your existing staples: chicken thighs, rice, eggs, carrots, and onions. These ingredients form the backbone of five hearty, low-cost dinners.\n\n**Day 1: Chicken & Vegetable Fried Rice**\nSauté diced chicken, carrots, and onions. Cook rice separately, then stir-fry everything together with eggs scrambled into the wok. Season with soy sauce or salt.\n\n**Day 2: One-Pot Chicken and Rice Stew**\nBrown chicken thighs, remove, then sauté onions and carrots. Add rice and broth (or water with bouillon) to simmer until the rice is tender and the chicken is cooked through.\n\n**Day 3: Egg Fried Rice with Leftover Chicken**\nUse any remaining chicken from Day 1 or 2. Sauté chopped onions and carrots, add cold rice, and scramble in two eggs. Season heavily with garlic powder or soy sauce.\n\n**Day 4: Baked Chicken Thighs with Roasted Vegetables**\nSeason chicken thighs with salt, pepper, and paprika. Toss chopped carrots and onions in oil. Bake everything on one sheet pan until the chicken is crispy and veggies are tender. Serve over rice.\n\n**Day 5: Simple Chicken Soup**\nSimmer remaining chicken bones/meat with chopped onions, carrots, and garlic in water. Add rice to the broth for the last 15 minutes. Season with herbs.\n\n**Shopping List**\nTo enhance flavor and nutrition within your budget, buy:\n*   1 bottle soy sauce ($3)\n*   1 box chicken bouillon cubes ($2)\n*   1 bag frozen mixed vegetables ($2)\n*   1 can diced tomatoes ($1)\n*   Garlic powder and paprika ($5)\n*   Cooking oil if needed ($5)\n\nThis plan maximizes your inventory while keeping costs low. Total estimated shopping cost: ~$18, leaving room for emergencies.",
-    "requested_model": "current-fast",
-    "resolved_model": "qwen3.8-flash-next",
+    "requested": "current-fast",
+    "resolved": "qwen3.8-flash-next",
     "receipt": "req_8f8b949500084b0f98619b44bfd5c243"
-  }
+  },
+  "receipt_detail": [
+    [
+      "Asked for",
+      "image"
+    ],
+    [
+      "Ran as",
+      "krea2-turbo"
+    ],
+    [
+      "Where",
+      "Your own engine. Remote provider: no."
+    ],
+    [
+      "Cost",
+      "Not recorded for a local engine."
+    ],
+    [
+      "Prompt saved",
+      "No"
+    ],
+    [
+      "Latency",
+      "36.5 s"
+    ],
+    [
+      "Status",
+      "ok"
+    ],
+    [
+      "Receipt",
+      "req_9f952f4c992c41fb87fd557022325edd"
+    ]
+  ]
 }

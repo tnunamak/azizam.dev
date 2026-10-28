@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Mark from '../components/Mark.astro';
+import AudioChip from '../components/AudioChip.astro';
 import { GET_STARTED } from '../config';
 import recorded from '../data/recorded.json';
+import peaks from '../data/audio-peaks.json';
 import '../styles/home.css';
 
 const productDescription =
@@ -24,8 +26,14 @@ for (const raw of recorded.chat.answer.split('\n')) {
     answerLines.push({ kind: 'p', text });
   }
 }
+// The first blocks show when the reply is folded; the rest sit inside the native details.
+const foldedLines = answerLines.slice(0, 5);
+const restLines = answerLines.slice(5);
 // Split on ** so that odd segments render as <strong>.
 const bold = (text) => text.split('**');
+const speechPeaks = peaks['use-speech.mp3'];
+const musicPeaks = peaks['use-music.mp3'];
+const wallLead = recorded.images[0];
 ---
 <Base title="AI for your people. On your terms. · Azizam" description={productDescription} bodyClass="home">
   <main id="content" tabindex="-1" class="home">
@@ -38,81 +46,100 @@ const bold = (text) => text.split('**');
         </h1>
         <p class="hero-description">Azizam runs the image, speech, music and chat models you set up, and gives each person and app its own key and access plan.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" data-cta href="#use">See what it makes</a>
-          <a class="btn btn-secondary" data-cta href={GET_STARTED}>Read the setup guide</a>
+          <a class="btn btn-primary" data-cta href={GET_STARTED}>Read the setup guide</a>
+          <a class="btn btn-secondary" data-cta href="/docs/api/">API guides</a>
         </div>
         <p class="preview-note">Private preview. Access is by invitation from the person who runs the gateway.</p>
       </div>
 
-      <div class="hero-proof">
-        <figure class="artifact artifact-image">
-          <img
-            src="/media/use-kitchen.webp"
-            width="900"
-            height="900"
-            fetchpriority="high"
-            alt="Flat illustration of a family kitchen on a Sunday morning: two copper pots on a teal range, utensils on the counter. No people or text."
-          />
-          <figcaption>Image from <code>image-fast</code>. Recorded through Azizam on {recordedOn}.</figcaption>
-        </figure>
-        <figure class="artifact artifact-audio">
-          <audio controls preload="none" src="/media/use-speech.mp3" aria-label="Speech clip: Dinner is at seven. The rice is on, and the beans need about twenty more minutes."></audio>
-          <figcaption>
-            <span class="quote">“Dinner is at seven. The rice is on, and the beans need about twenty more minutes.”</span>
-            Speech from <code>tts-1</code>, 5.7 s. Recorded through Azizam on {recordedOn}.
-          </figcaption>
-        </figure>
-      </div>
+      <figure class="wall">
+        <figcaption class="wall-head">
+          <span>Made through Azizam · {recordedOn}</span>
+        </figcaption>
+        <div class="wall-grid">
+          {recorded.images.map((image) => (
+            <div class="tile">
+              <img
+                src={image.src}
+                width="640"
+                height="640"
+                loading={image.id === wallLead.id ? 'eager' : 'lazy'}
+                fetchpriority={image.id === wallLead.id ? 'high' : undefined}
+                alt={image.alt}
+              />
+              <span class="tile-label">{image.tag}</span>
+            </div>
+          ))}
+        </div>
+        <div class="wall-audio">
+          <AudioChip src="/media/use-speech.mp3" title={recorded.speech.title} duration={recorded.speech.duration} model={recorded.speech.model} peaks={speechPeaks.peaks} />
+          <p class="receipt-id">Speech receipt {recorded.speech.receipt}</p>
+        </div>
+      </figure>
     </section>
 
     <section id="use" class="chapter wrap" aria-labelledby="use-title">
       <p class="eyebrow">Use</p>
       <h2 id="use-title">What people make with it</h2>
-      <p class="chapter-lede">Each item is one request sent through Azizam. The outputs are unedited.</p>
-      <div class="artifact-grid">
-        <figure class="artifact">
-          <img
-            src="/media/use-park-map.webp"
-            width="900"
-            height="900"
-            loading="lazy"
-            alt="Simple vector map of a neighbourhood park: a pond, footpaths, trees, a playground and a bench."
-          />
-          <figcaption>
-            Image from <code>image-fast</code>, run as <code>flux2-klein-4b</code>. Recorded through Azizam on {recordedOn}.
-            <span class="receipt-id">req_107540fc8d7d4491bc3fe9a18e4c6b20</span>
-          </figcaption>
+      <p class="chapter-lede">Each item is one request sent through Azizam. The content is unedited; files are resized for the web.</p>
+
+      <div class="use-grid">
+        <figure class="artifact artifact-audio">
+          <p class="artifact-head">Music · <code>{recorded.music.requested}</code> → <code>{recorded.music.resolved}</code></p>
+          <AudioChip src="/media/use-music.mp3" title={recorded.music.title} duration={recorded.music.duration} model={recorded.music.model} peaks={musicPeaks.peaks} />
+          <figcaption>Recorded through Azizam on {recordedOn}. <span class="receipt-id">{recorded.music.receipt}</span></figcaption>
         </figure>
 
-        <figure class="artifact artifact-audio">
-          <audio controls preload="none" src="/media/use-music.mp3" aria-label="Instrumental music clip, 15 seconds"></audio>
-          <figcaption>
-            Music from <code>music</code>, run as <code>ace-step-1.5-xl-turbo</code>, 15 s. Recorded through Azizam on {recordedOn}.
-            <span class="receipt-id">req_f5787a780a7f43908d149afbfb220f31</span>
-          </figcaption>
+        <figure class="artifact artifact-chat">
+          <p class="artifact-head">Chat · <code>{recorded.chat.requested}</code> → <code>{recorded.chat.resolved}</code></p>
+          <div class="thread">
+            <p class="bubble bubble-user">{recorded.chat.prompt}</p>
+            <div class="bubble bubble-reply">
+              <div class="reply-folded">
+                {foldedLines.map((line) =>
+                  line.kind === 'ul' ? (
+                    <ul>{line.items.map((item) => <li>{bold(item).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</li>)}</ul>
+                  ) : (
+                    <p>{bold(line.text).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</p>
+                  ),
+                )}
+              </div>
+              <details class="reply-more">
+                <summary>Read the full answer</summary>
+                {restLines.map((line) =>
+                  line.kind === 'ul' ? (
+                    <ul>{line.items.map((item) => <li>{bold(item).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</li>)}</ul>
+                  ) : (
+                    <p>{bold(line.text).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</p>
+                  ),
+                )}
+              </details>
+            </div>
+          </div>
+          <figcaption>Recorded through Azizam on {recordedOn}. <span class="receipt-id">{recorded.chat.receipt}</span></figcaption>
         </figure>
       </div>
 
-      <figure class="artifact artifact-text">
-          <blockquote class="question">
-            <p>{recorded.chat.prompt}</p>
-          </blockquote>
-          <div class="answer">
-            {answerLines.map((line) =>
-              line.kind === 'ul' ? (
-                <ul>
-                  {line.items.map((item) => <li>{bold(item).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</li>)}
-                </ul>
-              ) : (
-                <p>{bold(line.text).map((s, i) => (i % 2 ? <strong>{s}</strong> : s))}</p>
-              ),
-            )}
-          </div>
-          <figcaption>
-            Chat from <code>current-fast</code>, run as <code>qwen3.8-flash-next</code>. Recorded through Azizam on {recordedOn}.
-            <span class="receipt-id">{recorded.chat.receipt}</span>
-          </figcaption>
-        </figure>
+      <figure class="artifact receipts-table">
+        <table>
+          <caption>The four images in the wall</caption>
+          <thead>
+            <tr><th scope="col">Image</th><th scope="col">Asked for</th><th scope="col">Ran as</th><th scope="col">Receipt</th><th scope="col">Time</th></tr>
+          </thead>
+          <tbody>
+            {recorded.images.map((image) => (
+              <tr>
+                <td><img src={image.src} width="56" height="56" alt="" loading="lazy" /> {image.tag}</td>
+                <td><code>{image.requested}</code></td>
+                <td><code>{image.resolved}</code></td>
+                <td><code class="receipt-id">{image.receipt}</code></td>
+                <td>{image.latency}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <figcaption>Recorded through Azizam on {recordedOn}. Cost is not recorded for these local engines.</figcaption>
+      </figure>
     </section>
 
     <section id="share" class="chapter wrap" aria-labelledby="share-title">
@@ -121,39 +148,43 @@ const bold = (text) => text.split('**');
       <p class="chapter-lede">
         A key belongs to one person or app. Its access plan sets which models it may use and the spend cap for it. Revoke the key and that person or app stops.
       </p>
-      <figure class="artifact artifact-keys">
-        <picture>
-          <source srcset="/images/apps-keys-hero-desktop-dark.webp" media="(prefers-color-scheme: dark)" width="1100" height="245" />
-          <img
-            src="/images/apps-keys-hero-desktop-light.webp"
-            width="1100"
-            height="245"
-            alt="Apps and keys: an app card with its access plan, a key row with a masked value, and an add-key action."
-          />
-        </picture>
-        <figcaption>Apps &amp; keys, with demo data.</figcaption>
+      <figure class="artifact holders" aria-labelledby="holders-title">
+        <figcaption class="holders-head">
+          <span id="holders-title">Holders and plans</span>
+          <span class="example-tag">Example</span>
+        </figcaption>
+        <ul>
+          <li>
+            <span class="holder-name">Family</span>
+            <span class="chips"><span class="chip-plan">chat</span><span class="chip-plan">images</span></span>
+            <span class="cap">$5 / month</span>
+          </li>
+          <li>
+            <span class="holder-name">Kids' tablet</span>
+            <span class="chips"><span class="chip-plan">chat only</span></span>
+            <span class="cap">$1 / month</span>
+          </li>
+          <li>
+            <span class="holder-name">Home Assistant voice</span>
+            <span class="chips"><span class="chip-plan">speech</span></span>
+            <span class="cap cap-unset">no cap set</span>
+          </li>
+        </ul>
+        <p class="holders-note">Example values, not a screenshot and not a price. Your gateway's keys and caps are set in Apps &amp; keys.</p>
       </figure>
-      <p class="example"><strong>Example budget, not a price:</strong> one family plan with chat and image models and a $5 monthly spend cap. You choose the models and caps.</p>
     </section>
 
     <section id="understand" class="chapter wrap" aria-labelledby="understand-title">
       <p class="eyebrow">Understand</p>
       <h2 id="understand-title">Every request leaves a receipt</h2>
       <p class="chapter-lede">
-        Usage shows who asked, which model ran, where it ran and what it cost. This is the receipt for the kitchen image above, with the app name removed.
+        Usage shows who asked, which model ran, where it ran and what it cost. This is the receipt for the plate image in the wall, with the app name removed.
       </p>
       <figure class="artifact receipt">
         <dl>
-          <div><dt>Route</dt><dd>POST /v1/images/generations</dd></div>
-          <div><dt>Asked for</dt><dd>image-fast</dd></div>
-          <div><dt>Ran as</dt><dd>flux2-klein-4b</dd></div>
-          <div><dt>Where</dt><dd>Your own engine. Remote provider: no.</dd></div>
-          <div><dt>Status</dt><dd>ok</dd></div>
-          <div><dt>Time</dt><dd>19.7 s</dd></div>
-          <div><dt>Cost</dt><dd>Not recorded for a local engine.</dd></div>
-          <div><dt>Prompt saved</dt><dd>No</dd></div>
-          <div><dt>App</dt><dd>Removed</dd></div>
-          <div><dt>Receipt</dt><dd>req_2769d0d28bbb4bfdb98472e470446a96</dd></div>
+          {recorded.receipt_detail.map(([term, value]) => (
+            <div><dt>{term}</dt><dd>{value}</dd></div>
+          ))}
         </dl>
         <figcaption>Recorded through Azizam on {recordedOn}.</figcaption>
       </figure>

@@ -2,23 +2,28 @@
 name: Azizam
 description: A self-hosted gateway for the AI people already use.
 colors:
-  background: "#f3f6f6"
-  ink: "#10232a"
-  primary: "#0d4552"
-  accent: "#0a6676"
-  line: "#d7e0e2"
+  background: "#f6f4ec"
+  ink: "#202d29"
+  primary: "#155b50"
+  accent: "#155b50"
+  muted: "#58635d"
+  line: "#d8ddd3"
+  soft: "#e9e9de"
   on-primary: "#ffffff"
-  code-background: "#0d1117"
-  code-ink: "#e6edf3"
-  code-line: "#30363d"
-  code-muted: "#9ea7b3"
-  code-hover: "#21262d"
+  code-background: "#182b25"
+  code-ink: "#e5eee5"
+  code-line: "#394b42"
+  code-muted: "#afbcb2"
+  code-hover: "#20332a"
   overlay: "rgb(5 15 18 / .6)"
   mark: "#c4532b"
-  dark-background: "#0c1f25"
-  dark-ink: "#e3ecee"
-  dark-primary: "#1f6f79"
-  dark-accent: "#8cc8cb"
+  dark-background: "#14221e"
+  dark-ink: "#ecede2"
+  dark-muted: "#afbcb2"
+  dark-line: "#394b42"
+  dark-accent: "#69d8c7"
+  dark-soft: "#20332a"
+  dark-code: "#0c1813"
   dark-mark: "#f08a5d"
 typography:
   display:
@@ -56,7 +61,7 @@ spacing:
 
 ## Direction
 
-The landing page follows an independent software editorial: one outcome line, then real Azizam output (an image and a speech clip, each labelled with its date and model), then three chapters (Use, Share, Understand), a developer request, the request flow and the limits. The hero copy sits full width above a band of outputs that begins in the first screen. Borders appear only around real artifacts: generated outputs, the Apps & keys screenshot, the receipt and the code panel. Prose stays open on the page. Artifacts use 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
+The landing page follows a warm editorial register: a two-column hero with the outcome line and setup link on the left, and a framed output wall on the right. The wall shows real Azizam output (four images, one speech clip, each with its receipt) and fits inside a 1440×900 first screen. Below the hero come three chapters (Use, Share, Understand), a developer request, the request flow and the limits. Borders appear only around real artifacts: the output wall, generated outputs, the chat exchange, the example holders card, the receipt and the code panel. Prose stays open on the page. Artifacts use 6px corners; landing controls and inline code use 4px. Documentation components keep their own radii: 8px for search controls and code/table panels, 6px for the search panel and code-copy control, and 12px for pager links.
 
 ## Typography
 
@@ -64,14 +69,18 @@ Newsreader Variable carries the display promise. DM Sans Variable handles naviga
 
 ## Colour
 
-Light surfaces use the app palette: background `#f3f6f6`, ink `#10232a`, primary `#0d4552`, and accent `#0a6676`. Dark mode uses a deep blue-green background and pale ink. The copper curl remains the only orange element; orange does not decorate text, links, or controls.
+Light surfaces use the warm paper palette: background `#f6f4ec`, ink `#202d29`, muted text `#58635d`, lines `#d8ddd3`, soft fills `#e9e9de`, and green `#155b50` for primary actions and links. The copper curl `#c4532b` is the accent colour: it marks the logo and nothing else on the page. Orange does not decorate text, links, or controls. Dark mode uses a deep green-black background `#14221e`, pale ink `#ecede2`, and a mint accent `#69d8c7`; the dark copper curl is `#f08a5d`.
+
+This reverses the cool app palette (`#f3f6f6` background, `#0a6676` accent) that replaced this warm palette after commit ac6b591 (2026-10-06).
 
 ## Layout and interaction
 
-The header lists Examples, Docs, and API, with the setup guide as its primary action. The footer links to the product, Docs, API, and Security; their text stays 24px apart. Each link keeps a 44px minimum hit area with 12px inline padding and matching negative margins, so the hit area fills the flex gap without changing visible spacing. The first link text aligns with the content edge. Home claims use plain rows with thin separators. The process stays on one line with right arrows above 720px, then stacks its stages with 90° down arrows and an 8px gap at 720px and below. The setup section has one short paragraph and a link to `/docs/start/install/`, with no homepage commands.
+The header lists Examples, Docs, and API, with "See what it makes" as its primary action; that action links to the Use section on the home page. The setup guide is linked once in the hero, with "API guides" beside it, so the header does not repeat it. The footer links to the product, Docs, API, and Security; their text stays 24px apart. Each link keeps a 44px minimum hit area with 12px inline padding and matching negative margins, so the hit area fills the flex gap without changing visible spacing. The first link text aligns with the content edge. The process stays on one line with right arrows above 720px, then stacks its stages with 90° down arrows and an 8px gap at 720px and below. The setup section has one short paragraph and a link to `/docs/start/install/`, with no homepage commands.
 
-The site respects system light and dark preferences, keyboard focus, reduced motion, and a 390px viewport with 20px side gutters. The 340px-wide phone proof crop appears at widths of 900px and below in a frame capped at 342px, including its border. Both proof crops display at native size at the 1440px and 390px reference widths. There is no authored motion on the landing page. Contrast must meet WCAG AA in both themes.
+Audio uses a custom compact player: a round play button, a title, an SVG waveform built from real peaks in `src/data/audio-peaks.json`, and the duration and model. The native `<audio>` element does the playing; with JavaScript its native controls are removed. Without JavaScript the native controls stay. The chat reply shows its first eight lines with a fade and a native `<details>` "Read the full answer" toggle.
+
+The site respects system light and dark preferences, keyboard focus, reduced motion, and a 390px viewport with 20px side gutters. At widths of 899px and below the hero stacks, with the output wall below the copy. There is no authored motion on the landing page. Contrast must meet WCAG AA in both themes.
 
 ## Evidence
 
-The landing page uses light and dark crops of the seeded Apps & Keys screen, captioned “Apps & keys, with demo data.” The desktop crop is 1100×245px from the 1440px viewport capture; the phone crop is 340×397px from the 390px viewport capture. A viewport capture, not a full-page one, keeps the fixed bottom navigation where a phone shows it. The phone crop ends above that navigation and above transient notices, so no tab bar or toast sits over the content. Masked key prefixes appear as nine muted bullets in monospace on their row backgrounds; no real values appear in the distributed images. Generated outputs appear only as labelled recordings: each shows its date, requested and resolved model, and receipt id. Where the gateway recorded no cost, the page says “not recorded”. No testimonials, counts, live statuses, or invented costs and timings are used as proof. The one budget figure is labelled as an example.
+The landing page shows real Azizam output, labelled as recordings: each artifact shows its date, requested and resolved model, and receipt id. The output wall holds four images from `image` (resolved to `krea2-turbo`) and one speech clip from `tts-1`. The Use section adds the music clip and the chat exchange. Where the gateway recorded no cost, the page says "not recorded". The Share card is a site-rendered example, marked "Example", and is not a screenshot. The Understand receipt has its app label removed. No testimonials, counts, live statuses, or invented costs and timings are used as proof.

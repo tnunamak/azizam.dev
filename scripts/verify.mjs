@@ -217,23 +217,31 @@ try {
           assert.equal(inFirstScreen.length, 3);
           assert.ok(inFirstScreen.every(Boolean), `${label}: h1 and both CTAs in the first screen`);
           if (width === 1440) {
-            assert.ok(await page.locator('.hero-proof .artifact-image').evaluate((el) => el.getBoundingClientRect().top < innerHeight - 200), `${label}: real output starts in the first screen`);
+            assert.ok(await page.locator('.wall').evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight), `${label}: output wall fits inside the 1440x900 fold`);
           }
+          assert.ok(await page.locator('.hero-copy').evaluate((el) => el.getBoundingClientRect().right <= innerWidth), `${label}: hero copy in bounds`);
           assert.equal(await page.locator('[data-cta]').count(), 2);
-          assert.deepEqual(await page.locator('[data-cta]').allInnerTexts(), ['See what it makes', 'Read the setup guide']);
-          assert.deepEqual(await page.locator('[data-cta]').evaluateAll((els) => els.map((el) => el.getAttribute('href'))), ['#use', '/docs/start/install/']);
+          assert.deepEqual(await page.locator('[data-cta]').allInnerTexts(), ['Read the setup guide', 'API guides']);
+          assert.deepEqual(await page.locator('[data-cta]').evaluateAll((els) => els.map((el) => el.getAttribute('href'))), ['/docs/start/install/', '/docs/api/']);
+          assert.equal(await page.locator('.site-nav a[href="/#use"]').innerText(), 'See what it makes');
           assert.equal(await page.locator('.preview-note').innerText(), 'Private preview. Access is by invitation from the person who runs the gateway.');
-          assert.match(await page.locator('.hero-proof figcaption').first().innerText(), /Recorded through Azizam on 28 October 2026/);
-          assert.equal(await page.locator('.receipt dt').count(), 10);
+          assert.match(await page.locator('.wall-head').innerText(), /Made through Azizam · 28 October 2026/);
+          assert.equal(await page.locator('.wall-grid img').count(), 4);
+          assert.equal(await page.locator('.receipt dt').count(), 8);
           assert.equal(await page.locator('.facts li').count(), 4);
-          assert.equal(await page.locator('.example').count(), 1);
+          assert.equal(await page.locator('.example-tag').count(), 1);
+          assert.equal(await page.locator('.holders li').count(), 3);
+          assert.equal(await page.locator('.reply-more summary').count(), 1);
+          assert.equal(await page.locator('.reply-more').evaluate((el) => el.open), false, `${label}: reply starts folded`);
+          assert.equal(await page.locator('.chip-play').count(), 2, `${label}: two audio chips`);
+          assert.equal(await page.locator('.wave .bar').count(), 96, `${label}: 48 bars per clip`);
           const recordedLabels = (await page.locator('main').innerText()).match(/Recorded through Azizam on 28 October 2026/g) ?? [];
-          assert.equal(recordedLabels.length, 6, `${label}: each generated artifact is labelled`);
+          assert.equal(recordedLabels.length, 4, `${label}: each generated artifact is labelled`);
           assert.equal(await page.locator('.proof-card, .early, .command-block, .quick-steps').count(), 0);
           assert.equal(await page.locator('.preview-note').count(), 1);
-          const image = page.locator('.hero-proof img');
-          assert.equal(await image.evaluate((img) => img.naturalWidth), 900, `${label}: hero image width`);
-          assert.equal(new URL(await image.evaluate((img) => img.currentSrc)).pathname, '/media/use-kitchen.webp', `${label}: hero image source`);
+          const image = page.locator('.wall-grid img').first();
+          assert.equal(await image.evaluate((img) => img.naturalWidth), 900, `${label}: wall image width`);
+          assert.equal(new URL(await image.evaluate((img) => img.currentSrc)).pathname, '/media/plate.webp', `${label}: wall image source`);
           const type = await page.locator('#content').evaluate((root) => ({
             section: [...root.querySelectorAll('h2')].map((el) => ({ size: getComputedStyle(el).fontSize, line: getComputedStyle(el).lineHeight })),
           }));
@@ -265,7 +273,7 @@ try {
             assert.equal(await page.locator('.site-disclosure nav a').count(), 4);
             assert.equal(await page.locator('.site-disclosure nav a:visible').count(), 4);
           } else {
-            assert.deepEqual(await page.locator('.site-nav a').allInnerTexts(), ['Examples', 'Docs', 'API', 'Read the setup guide']);
+            assert.deepEqual(await page.locator('.site-nav a').allInnerTexts(), ['Examples', 'Docs', 'API', 'See what it makes']);
           }
         }
         if (sample.name === 'examples') {
@@ -322,7 +330,7 @@ try {
   const page = await plain.newPage();
   await page.goto(url + '/', { waitUntil: 'networkidle' });
   assert.equal((await page.locator('h1').innerText()).replace(/\s+/g, ' '), HOME_H1);
-  assert.equal(await page.locator('.hero-proof img').isVisible(), true);
+  assert.equal(await page.locator('.wall-grid img').first().isVisible(), true);
   await page.goto(url + '/docs/start/install/', { waitUntil: 'networkidle' });
   assert.equal(await page.locator('pre').first().isVisible(), true);
   await plain.close();
