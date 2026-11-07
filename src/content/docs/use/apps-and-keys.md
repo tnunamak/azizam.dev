@@ -19,7 +19,7 @@ Use **Connection examples** if you need a setup example. If a prompt-saving note
 
 ## Create a key for an existing app
 
-Find the app in the list. Select **Create key**, or open the app's actions menu and select **Create key** or **Create another key**. Save the key before you leave the screen.
+Find the app in the list. Select **Add key** under it, or open the app's actions menu and select **Create key** (**Create another key** when the app already has one). Save the key before you leave the screen.
 
 If the app was created but its key was not, select **Retry key creation**.
 

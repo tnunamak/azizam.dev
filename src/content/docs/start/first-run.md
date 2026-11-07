@@ -37,7 +37,7 @@ The engine and its model names are settings. You can change or replace them late
 
 ## 3. Create an app key
 
-Open **Home**. Choose the app you want to connect, then select **Create key for** that app.
+Open **Apps & keys**. Find the app you want to connect, then select **Add key** under it. To make a new app and its key together, select **New app**.
 
 Save the key when it appears. It is shown only once.
 
